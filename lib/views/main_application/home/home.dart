@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,8 +12,10 @@ import 'package:zuluresh/models/category_model.dart';
 import 'package:zuluresh/services/global.dart';
 import 'package:zuluresh/utils/constants.dart';
 import 'package:zuluresh/views/choose_location.dart';
+import 'package:zuluresh/views/main_application/home/home_offers_screen.dart';
 import 'package:zuluresh/views/main_application/home/subcategory_screen.dart';
 
+import '../../../models/banner_model.dart';
 import '../../../models/cart_data_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final MainApplicationController _mainApplicationController = Get.find();
+  final PageController controller = PageController();
 
   @override
   void initState() {
@@ -42,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         setState(() {});
       }
-    }();
+    }
+    ();
   }
 
   @override
@@ -75,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(width: 2.w),
                             InkWell(
                               overlayColor:
-                                  MaterialStateProperty.all(Colors.transparent),
+                              MaterialStateProperty.all(Colors.transparent),
                               onTap: () {
                                 Get.to(() => const ChooseLocation());
                               },
@@ -85,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Home",
@@ -104,10 +110,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                   Text(
-                                    "${Global.storageServices.getString("pin_code")}, ${Global.storageServices.getString("pin_location")}",
+                                    "${Global.storageServices.getString(
+                                        "pin_code")}, ${Global.storageServices
+                                        .getString("pin_location")}",
                                     style: GoogleFonts.heebo(
                                       color: Colors.white,
-                                      fontSize: 13.sp,
+                                      fontSize: 14.sp,
                                     ),
                                   ),
                                 ],
@@ -154,13 +162,52 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       SizedBox(height: 2.h),
-                      SizedBox(
-                        width: 90.w,
-                        child: const Image(
-                          image: AssetImage("assets/images/home-banner.png"),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                      FutureBuilder<List<BannerModel>>(
+                          future: _mainApplicationController.getAllBanners(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              List<String> imgUrls = [];
+
+                              for (var item in snapshot.data!) {
+                                imgUrls.add(item.bannerImg!.url!);
+                              }
+
+                              return Column(children: [
+                                SizedBox(
+                                  width: 90.w,
+                                  height: 160,
+                                  child: PageView(
+                                      controller: controller,
+                                      onPageChanged: (val) {
+                                        _mainApplicationController
+                                            .bannerIdx.value = val;
+                                      },
+                                      children: List.generate(
+                                        3,
+                                            (index) =>
+                                            Image(
+                                              image: NetworkImage(
+                                                  imgUrls[index]),
+                                              fit: BoxFit.cover,
+                                            ),
+                                      )
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                  width: 90.w,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(imgUrls.length,
+                                            (index) => buildDots(index)),
+                                  ),
+                                ),
+                              ]);
+                            }
+                            return Center(
+                                child: CircularProgressIndicator(
+                                    color: Constants.primaryColor));
+                          }),
                       SizedBox(height: 2.h),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,13 +271,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             physics:
-                                                const BouncingScrollPhysics(),
+                                            const BouncingScrollPhysics(),
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 1.w),
                                             itemCount:
-                                                snapshot.data!.length >= 8
-                                                    ? 8
-                                                    : snapshot.data!.length,
+                                            snapshot.data!.length >= 8
+                                                ? 8
+                                                : snapshot.data!.length,
                                             itemBuilder: (context, index) {
                                               return InkWell(
                                                 onTap: () {
@@ -252,15 +299,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           height: 90,
                                                           width: 90,
                                                           decoration:
-                                                              BoxDecoration(
+                                                          BoxDecoration(
                                                             shape:
-                                                                BoxShape.circle,
+                                                            BoxShape.circle,
                                                             image:
-                                                                DecorationImage(
+                                                            DecorationImage(
                                                               image: NetworkImage(
                                                                   snapshot
                                                                       .data![
-                                                                          index]
+                                                                  index]
                                                                       .categoryImg!
                                                                       .url!),
                                                               fit: BoxFit.cover,
@@ -272,10 +319,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           snapshot.data![index]
                                                               .categoryName!,
                                                           style:
-                                                              GoogleFonts.heebo(
+                                                          GoogleFonts.heebo(
                                                             fontSize: 16.sp,
                                                             fontWeight:
-                                                                FontWeight.w500,
+                                                            FontWeight.w500,
                                                           ),
                                                         ),
                                                       ],
@@ -311,24 +358,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontSize: 18.sp,
                                 ),
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "View All",
-                                    style: GoogleFonts.heebo(
-                                      fontWeight: FontWeight.bold,
-                                      color: Constants.primaryColor,
-                                      fontSize: 16.sp,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(() =>
+                                  const HomeOfferScreen(
+                                    endpoints: Constants
+                                        .bestDealsProductsListEndPoint,
+                                  ));
+                                },
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "View All",
+                                      style: GoogleFonts.heebo(
+                                        fontWeight: FontWeight.bold,
+                                        color: Constants.primaryColor,
+                                        fontSize: 16.sp,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 1.w),
-                                  Icon(
-                                    AntDesign.arrowright,
-                                    color: Constants.primaryColor,
-                                    size: 16.sp,
-                                  ),
-                                ],
+                                    SizedBox(width: 1.w),
+                                    Icon(
+                                      AntDesign.arrowright,
+                                      color: Constants.primaryColor,
+                                      size: 16.sp,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -347,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 List<BestSellerDealsCombosSingleProductModel>>(
                               future: _mainApplicationController
                                   .getBestSellerDealsCombos(
-                                      Constants.bestDealsProductsListEndPoint),
+                                  Constants.bestDealsProductsListEndPoint),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return singleProductTile(snapshot);
@@ -374,24 +430,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontSize: 18.sp,
                                 ),
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "View All",
-                                    style: GoogleFonts.heebo(
-                                      fontWeight: FontWeight.bold,
-                                      color: Constants.primaryColor,
-                                      fontSize: 16.sp,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(() =>
+                                  const HomeOfferScreen(
+                                    endpoints: Constants
+                                        .bestSellerProductsListEndPoint,
+                                  ));
+                                },
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "View All",
+                                      style: GoogleFonts.heebo(
+                                        fontWeight: FontWeight.bold,
+                                        color: Constants.primaryColor,
+                                        fontSize: 16.sp,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 1.w),
-                                  Icon(
-                                    AntDesign.arrowright,
-                                    color: Constants.primaryColor,
-                                    size: 16.sp,
-                                  ),
-                                ],
+                                    SizedBox(width: 1.w),
+                                    Icon(
+                                      AntDesign.arrowright,
+                                      color: Constants.primaryColor,
+                                      size: 16.sp,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -410,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 List<BestSellerDealsCombosSingleProductModel>>(
                               future: _mainApplicationController
                                   .getBestSellerDealsCombos(
-                                      Constants.bestSellerProductsListEndPoint),
+                                  Constants.bestSellerProductsListEndPoint),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return singleProductTile(snapshot);
@@ -437,24 +502,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontSize: 18.sp,
                                 ),
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "View All",
-                                    style: GoogleFonts.heebo(
-                                      fontWeight: FontWeight.bold,
-                                      color: Constants.primaryColor,
-                                      fontSize: 16.sp,
+                              InkWell(
+                                onTap: () {
+                                  Get.to(() =>
+                                  const HomeOfferScreen(
+                                    endpoints: Constants
+                                        .bestCombosProductsListEndPoint,
+                                  ));
+                                },
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "View All",
+                                      style: GoogleFonts.heebo(
+                                        fontWeight: FontWeight.bold,
+                                        color: Constants.primaryColor,
+                                        fontSize: 16.sp,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 1.w),
-                                  Icon(
-                                    AntDesign.arrowright,
-                                    color: Constants.primaryColor,
-                                    size: 16.sp,
-                                  ),
-                                ],
+                                    SizedBox(width: 1.w),
+                                    Icon(
+                                      AntDesign.arrowright,
+                                      color: Constants.primaryColor,
+                                      size: 16.sp,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -473,7 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 List<BestSellerDealsCombosSingleProductModel>>(
                               future: _mainApplicationController
                                   .getBestSellerDealsCombos(
-                                      Constants.bestCombosProductsListEndPoint),
+                                  Constants.bestCombosProductsListEndPoint),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return singleProductTile(snapshot);
@@ -495,7 +569,122 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      floatingActionButton: Obx(() {
+        return SizedBox(
+          child: Global.storageServices.getString("x-auth-token") != null
+              ? _mainApplicationController.cartItems.isNotEmpty
+              ? Container(
+            width: 90.w,
+            padding:
+            EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  blurRadius: 10,
+                  spreadRadius: 5,
+                  offset: const Offset(0, 0),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Items in Cart",
+                  style: GoogleFonts.heebo(
+                    color: Constants.primaryColor,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    _mainApplicationController.pageIdx.value = 2;
+                  },
+                  child: Text(
+                    "View Cart",
+                    style: GoogleFonts.heebo(
+                      color: Constants.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+              : const SizedBox()
+              : _mainApplicationController.cartItems.isNotEmpty
+              ? Container(
+            width: 90.w,
+            padding:
+            EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  blurRadius: 10,
+                  spreadRadius: 5,
+                  offset: const Offset(0, 0),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Items in Cart",
+                  style: GoogleFonts.heebo(
+                    color: Constants.primaryColor,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    _mainApplicationController.pageIdx.value = 2;
+                  },
+                  child: Text(
+                    "View Cart",
+                    style: GoogleFonts.heebo(
+                      color: Constants.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+              : const SizedBox(),
+        );
+      }),
     );
+  }
+
+  Widget buildDots(int index) {
+    return Obx(() {
+      return Row(
+        children: [
+          Container(
+            height: 10,
+            width: 10,
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Constants.lightTextColor.withOpacity(0.1),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _mainApplicationController.bannerIdx.value == index
+                    ? Constants.primaryColor
+                    : Colors.transparent,
+              ),
+            ),
+          )
+        ],
+      );
+    });
   }
 
   Widget singleProductTile(snapshot) {
@@ -540,7 +729,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(2.5.w),
                               image: DecorationImage(
                                 image: NetworkImage(
-                                    snapshot.data![0].productImg![0].url!),
+                                    snapshot.data![index].productImg![0].url!),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -597,101 +786,101 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               containsItemWithId(snapshot.data![index].sId)
                                   ? InkWell(
-                                      onTap: () async {
-                                        if (Global.storageServices
-                                                .getString("x-auth-token") !=
-                                            null) {
-                                          if (await _mainApplicationController
-                                              .deleteItemFromCart(
-                                                  snapshot.data![index].sId)) {
-                                            _mainApplicationController
-                                                .deleteItemById(
-                                                    snapshot.data![index].sId);
-                                            _mainApplicationController.cartItems
-                                                .refresh();
-                                          } else {
-                                            if (mounted) {
-                                              CustomToasts.errorToast(context,
-                                                  "Unable to Delete Item from Cart..");
-                                            }
-                                          }
-                                        } else {
-                                          _mainApplicationController
-                                              .deleteItemById(
-                                                  snapshot.data![index].sId);
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(1.w),
-                                          border: Border.all(
-                                              color: Constants.primaryColor),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 1.5.w),
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.delete_outline,
-                                            color: Constants.primaryColor,
-                                          ),
-                                        ),
-                                      ),
-                                    )
+                                onTap: () async {
+                                  if (Global.storageServices
+                                      .getString("x-auth-token") !=
+                                      null) {
+                                    if (await _mainApplicationController
+                                        .deleteItemFromCart(
+                                        snapshot.data![index].sId)) {
+                                      _mainApplicationController
+                                          .deleteItemById(
+                                          snapshot.data![index].sId);
+                                      _mainApplicationController.cartItems
+                                          .refresh();
+                                    } else {
+                                      if (mounted) {
+                                        CustomToasts.errorToast(context,
+                                            "Unable to Delete Item from Cart..");
+                                      }
+                                    }
+                                  } else {
+                                    _mainApplicationController
+                                        .deleteItemById(
+                                        snapshot.data![index].sId);
+                                  }
+                                },
+                                child: Container(
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(1.w),
+                                    border: Border.all(
+                                        color: Constants.primaryColor),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 1.5.w),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.delete_outline,
+                                      color: Constants.primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              )
                                   : InkWell(
-                                      onTap: () async {
-                                        if (Global.storageServices
-                                                .getString("x-auth-token") !=
-                                            null) {
-                                          if (await _mainApplicationController
-                                              .addItemToCart(
-                                                  snapshot.data![index].sId)) {
-                                            _mainApplicationController.cartItems
-                                                .add({
-                                              "id": snapshot.data![index].sId,
-                                              "data": snapshot.data![index],
-                                              "qty": 1,
-                                            });
-                                            _mainApplicationController.cartItems
-                                                .refresh();
-                                          } else {
-                                            if (mounted) {
-                                              CustomToasts.errorToast(context,
-                                                  "Unable to add Item from Cart..");
-                                            }
-                                          }
-                                        } else {
-                                          _mainApplicationController.cartItems
-                                              .add({
-                                            "id": snapshot.data![index].sId,
-                                            "data": snapshot.data![index],
-                                            "qty": 1,
-                                          });
-                                          _mainApplicationController.cartItems
-                                              .refresh();
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(1.w),
-                                          border: Border.all(
-                                              color: Constants.primaryColor),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 5.w),
-                                        child: Center(
-                                          child: Text(
-                                            "Add",
-                                            style: GoogleFonts.heebo(
-                                              color: Constants.primaryColor,
-                                            ),
-                                          ),
-                                        ),
+                                onTap: () async {
+                                  if (Global.storageServices
+                                      .getString("x-auth-token") !=
+                                      null) {
+                                    if (await _mainApplicationController
+                                        .addItemToCart(
+                                        snapshot.data![index].sId)) {
+                                      _mainApplicationController.cartItems
+                                          .add({
+                                        "id": snapshot.data![index].sId,
+                                        "data": snapshot.data![index],
+                                        "qty": 1,
+                                      });
+                                      _mainApplicationController.cartItems
+                                          .refresh();
+                                    } else {
+                                      if (mounted) {
+                                        CustomToasts.errorToast(context,
+                                            "Unable to add Item from Cart..");
+                                      }
+                                    }
+                                  } else {
+                                    _mainApplicationController.cartItems
+                                        .add({
+                                      "id": snapshot.data![index].sId,
+                                      "data": snapshot.data![index],
+                                      "qty": 1,
+                                    });
+                                    _mainApplicationController.cartItems
+                                        .refresh();
+                                  }
+                                },
+                                child: Container(
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(1.w),
+                                    border: Border.all(
+                                        color: Constants.primaryColor),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w),
+                                  child: Center(
+                                    child: Text(
+                                      "Add",
+                                      style: GoogleFonts.heebo(
+                                        color: Constants.primaryColor,
                                       ),
                                     ),
+                                  ),
+                                ),
+                              ),
                             ],
                           );
                         }),

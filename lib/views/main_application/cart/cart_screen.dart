@@ -146,7 +146,9 @@ class _CartScreenState extends State<CartScreen> {
                                                           snapshot
                                                               .data!
                                                               .productsData![
-                                                                  index].productMrp.toString(),
+                                                                  index]
+                                                              .productMrp
+                                                              .toString(),
                                                           textAlign:
                                                               TextAlign.start,
                                                           overflow: TextOverflow
@@ -154,7 +156,9 @@ class _CartScreenState extends State<CartScreen> {
                                                           maxLines: 2,
                                                           style:
                                                               GoogleFonts.heebo(
-                                                                decoration: TextDecoration.lineThrough,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
                                                             color: Colors.black,
                                                             fontSize: 14.sp,
                                                             fontWeight:
@@ -235,6 +239,51 @@ class _CartScreenState extends State<CartScreen> {
                                                                   InkWell(
                                                                     onTap:
                                                                         () async {
+                                                                      if (await _mainApplicationController.deleteItemFromCart(snapshot
+                                                                          .data!
+                                                                          .productsData![
+                                                                      index]
+                                                                          .sId!)) {
+                                                                        setState(
+                                                                                () {});
+                                                                      } else {
+                                                                        if (mounted) {
+                                                                          CustomToasts.errorToast(
+                                                                              context,
+                                                                              "Unable to Decrease Quantity");
+                                                                        }
+                                                                      }
+                                                                    },
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .remove,
+                                                                      color: Constants
+                                                                          .primaryColor,
+                                                                      size:
+                                                                      17.sp,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    snapshot
+                                                                        .data!
+                                                                        .productsData![
+                                                                    index]
+                                                                        .productQuantity
+                                                                        .toString(),
+                                                                    style: GoogleFonts
+                                                                        .heebo(
+                                                                      color: Constants
+                                                                          .primaryColor,
+                                                                      fontSize:
+                                                                      16.sp,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                    ),
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap:
+                                                                        () async {
                                                                       if (await _mainApplicationController.addItemToCart(snapshot
                                                                           .data!
                                                                           .productsData![
@@ -259,51 +308,6 @@ class _CartScreenState extends State<CartScreen> {
                                                                     },
                                                                     child: Icon(
                                                                       Icons.add,
-                                                                      color: Constants
-                                                                          .primaryColor,
-                                                                      size:
-                                                                          17.sp,
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                    snapshot
-                                                                        .data!
-                                                                        .productsData![
-                                                                            index]
-                                                                        .productQuantity
-                                                                        .toString(),
-                                                                    style: GoogleFonts
-                                                                        .heebo(
-                                                                      color: Constants
-                                                                          .primaryColor,
-                                                                      fontSize:
-                                                                          16.sp,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                  InkWell(
-                                                                    onTap:
-                                                                        () async {
-                                                                      if (await _mainApplicationController.deleteItemFromCart(snapshot
-                                                                          .data!
-                                                                          .productsData![
-                                                                              index]
-                                                                          .sId!)) {
-                                                                        setState(
-                                                                            () {});
-                                                                      } else {
-                                                                        if (mounted) {
-                                                                          CustomToasts.errorToast(
-                                                                              context,
-                                                                              "Unable to Decrease Quantity");
-                                                                        }
-                                                                      }
-                                                                    },
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .remove,
                                                                       color: Constants
                                                                           .primaryColor,
                                                                       size:
@@ -345,18 +349,18 @@ class _CartScreenState extends State<CartScreen> {
                               );
                             })
                         : Obx(() {
-                          if(_mainApplicationController.cartItems.isEmpty){
-                            return Center(
-                              child: Text(
-                                "No any Item in Cart..",
-                                style: GoogleFonts.heebo(
-                                  color: Constants.primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 17.sp,
+                            if (_mainApplicationController.cartItems.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  "No any Item in Cart..",
+                                  style: GoogleFonts.heebo(
+                                    color: Constants.primaryColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17.sp,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
+                              );
+                            }
                             return ListView.builder(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 5.w, vertical: 5.w),
@@ -507,6 +511,41 @@ class _CartScreenState extends State<CartScreen> {
                                                             InkWell(
                                                               onTap: () {
                                                                 _mainApplicationController
+                                                                    .decrementQtyById(
+                                                                    _mainApplicationController
+                                                                        .cartItems[index]
+                                                                    [
+                                                                    "id"]);
+                                                                _mainApplicationController
+                                                                    .cartItems
+                                                                    .refresh();
+                                                              },
+                                                              child: Icon(
+                                                                Icons.remove,
+                                                                color: Constants
+                                                                    .primaryColor,
+                                                                size: 17.sp,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              _mainApplicationController
+                                                                  .cartItems[
+                                                              index]
+                                                              ["qty"]
+                                                                  .toString(),
+                                                              style: GoogleFonts
+                                                                  .heebo(
+                                                                color: Constants
+                                                                    .primaryColor,
+                                                                fontSize: 16.sp,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .bold,
+                                                              ),
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                _mainApplicationController
                                                                     .incrementQtyById(
                                                                         _mainApplicationController
                                                                                 .cartItems[index]
@@ -518,41 +557,6 @@ class _CartScreenState extends State<CartScreen> {
                                                               },
                                                               child: Icon(
                                                                 Icons.add,
-                                                                color: Constants
-                                                                    .primaryColor,
-                                                                size: 17.sp,
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              _mainApplicationController
-                                                                  .cartItems[
-                                                                      index]
-                                                                      ["qty"]
-                                                                  .toString(),
-                                                              style: GoogleFonts
-                                                                  .heebo(
-                                                                color: Constants
-                                                                    .primaryColor,
-                                                                fontSize: 16.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            InkWell(
-                                                              onTap: () {
-                                                                _mainApplicationController
-                                                                    .decrementQtyById(
-                                                                        _mainApplicationController
-                                                                                .cartItems[index]
-                                                                            [
-                                                                            "id"]);
-                                                                _mainApplicationController
-                                                                    .cartItems
-                                                                    .refresh();
-                                                              },
-                                                              child: Icon(
-                                                                Icons.remove,
                                                                 color: Constants
                                                                     .primaryColor,
                                                                 size: 17.sp,
@@ -614,7 +618,10 @@ class _CartScreenState extends State<CartScreen> {
                                                   size: 15.sp,
                                                 ),
                                                 Text(
-                                                  (snapshot.data!.totalPrice! + snapshot.data!.discount!).toString(),
+                                                  (snapshot.data!.totalPrice! +
+                                                          snapshot
+                                                              .data!.discount!)
+                                                      .toString(),
                                                   style: GoogleFonts.heebo(
                                                     fontSize: 15.sp,
                                                     fontWeight: FontWeight.bold,
@@ -648,7 +655,8 @@ class _CartScreenState extends State<CartScreen> {
                                                   size: 15.sp,
                                                 ),
                                                 Text(
-                                                  snapshot.data!.discount.toString(),
+                                                  snapshot.data!.discount
+                                                      .toString(),
                                                   style: GoogleFonts.heebo(
                                                     fontSize: 15.sp,
                                                     color: Colors.black,
@@ -716,7 +724,8 @@ class _CartScreenState extends State<CartScreen> {
                                                   size: 18.sp,
                                                 ),
                                                 Text(
-                                                  snapshot.data!.totalPrice.toString(),
+                                                  snapshot.data!.totalPrice
+                                                      .toString(),
                                                   style: GoogleFonts.heebo(
                                                     fontSize: 18.sp,
                                                     color:
@@ -743,165 +752,177 @@ class _CartScreenState extends State<CartScreen> {
                               );
                             }
                           })
-                      : _mainApplicationController.cartItems.isNotEmpty ? Container(
-                          width: 90.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9),
-                            border: Border.all(color: const Color(0xFF941A49)),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.w, vertical: 1.h),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Item Total",
-                                      style: GoogleFonts.heebo(
-                                        fontSize: 15.sp,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20.w,
-                                    child: Row(
+                      : _mainApplicationController.cartItems.isNotEmpty
+                          ? Obx(() {
+                              return Container(
+                                width: 90.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(9),
+                                  border: Border.all(
+                                      color: const Color(0xFF941A49)),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w, vertical: 1.h),
+                                child: Column(
+                                  children: [
+                                    Row(
                                       children: [
-                                        Icon(
-                                          Icons.currency_rupee,
-                                          color: Colors.black,
-                                          size: 15.sp,
+                                        Expanded(
+                                          child: Text(
+                                            "Item Total",
+                                            style: GoogleFonts.heebo(
+                                              fontSize: 15.sp,
+                                              color: Colors.black,
+                                            ),
+                                          ),
                                         ),
-                                        Text(
-                                          (_mainApplicationController.getSumOfProducts() + _mainApplicationController.getDiscountSumOfProducts()).toString(),
-                                          style: GoogleFonts.heebo(
-                                            fontSize: 15.sp,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
+                                        SizedBox(
+                                          width: 20.w,
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.currency_rupee,
+                                                color: Colors.black,
+                                                size: 15.sp,
+                                              ),
+                                              Text(
+                                                (_mainApplicationController
+                                                            .getSumOfProducts() +
+                                                        _mainApplicationController
+                                                            .getDiscountSumOfProducts())
+                                                    .toString(),
+                                                style: GoogleFonts.heebo(
+                                                  fontSize: 15.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 1.h),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Discount",
-                                      style: GoogleFonts.heebo(
-                                        fontSize: 15.sp,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20.w,
-                                    child: Row(
+                                    SizedBox(height: 1.h),
+                                    Row(
                                       children: [
-                                        Icon(
-                                          Icons.currency_rupee,
-                                          color: Colors.black,
-                                          size: 15.sp,
+                                        Expanded(
+                                          child: Text(
+                                            "Discount",
+                                            style: GoogleFonts.heebo(
+                                              fontSize: 15.sp,
+                                              color: Colors.black,
+                                            ),
+                                          ),
                                         ),
-                                        Text(
-                                          _mainApplicationController.getDiscountSumOfProducts().toString(),
-                                          style: GoogleFonts.heebo(
-                                            fontSize: 15.sp,
-                                            color: Colors.black,
+                                        SizedBox(
+                                          width: 20.w,
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.currency_rupee,
+                                                color: Colors.black,
+                                                size: 15.sp,
+                                              ),
+                                              Text(
+                                                _mainApplicationController
+                                                    .getDiscountSumOfProducts()
+                                                    .toString(),
+                                                style: GoogleFonts.heebo(
+                                                  fontSize: 15.sp,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              // Row(
-                              //   children: [
-                              //     Expanded(
-                              //       child: Text(
-                              //         "Charge Delivery",
-                              //         style: GoogleFonts.heebo(
-                              //           fontSize: 15.sp,
-                              //           color: Colors.black,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     SizedBox(
-                              //       width: 20.w,
-                              //       child: Row(
-                              //         children: [
-                              //           Icon(
-                              //             Icons.currency_rupee,
-                              //             color: Colors.black,
-                              //             size: 15.sp,
-                              //           ),
-                              //           Text(
-                              //             "16",
-                              //             style: GoogleFonts.heebo(
-                              //               fontSize: 15.sp,
-                              //               color: Colors.black,
-                              //             ),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
-                              Divider(
-                                height: 2.h,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Total",
-                                      style: GoogleFonts.heebo(
-                                        fontSize: 18.sp,
-                                        color: Constants.primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    // Row(
+                                    //   children: [
+                                    //     Expanded(
+                                    //       child: Text(
+                                    //         "Charge Delivery",
+                                    //         style: GoogleFonts.heebo(
+                                    //           fontSize: 15.sp,
+                                    //           color: Colors.black,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //     SizedBox(
+                                    //       width: 20.w,
+                                    //       child: Row(
+                                    //         children: [
+                                    //           Icon(
+                                    //             Icons.currency_rupee,
+                                    //             color: Colors.black,
+                                    //             size: 15.sp,
+                                    //           ),
+                                    //           Text(
+                                    //             "16",
+                                    //             style: GoogleFonts.heebo(
+                                    //               fontSize: 15.sp,
+                                    //               color: Colors.black,
+                                    //             ),
+                                    //           ),
+                                    //         ],
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    Divider(
+                                      height: 2.h,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 20.w,
-                                    child: Row(
+                                    Row(
                                       children: [
-                                        Icon(
-                                          Icons.currency_rupee,
-                                          color: Constants.primaryColor,
-                                          size: 18.sp,
+                                        Expanded(
+                                          child: Text(
+                                            "Total",
+                                            style: GoogleFonts.heebo(
+                                              fontSize: 18.sp,
+                                              color: Constants.primaryColor,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
-                                        Text(
-                                          _mainApplicationController.getSumOfProducts().toString(),
-                                          style: GoogleFonts.heebo(
-                                            fontSize: 18.sp,
-                                            color: Constants.primaryColor,
-                                            fontWeight: FontWeight.bold,
+                                        SizedBox(
+                                          width: 20.w,
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.currency_rupee,
+                                                color: Constants.primaryColor,
+                                                size: 18.sp,
+                                              ),
+                                              Text(
+                                                _mainApplicationController
+                                                    .getSumOfProducts()
+                                                    .toString(),
+                                                style: GoogleFonts.heebo(
+                                                  fontSize: 18.sp,
+                                                  color: Constants.primaryColor,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ) : const SizedBox(),
+                                  ],
+                                ),
+                              );
+                            })
+                          : const SizedBox(),
                   SizedBox(height: 1.5.h),
                   InkWell(
                     onTap: () {
-                      if(_mainApplicationController.cartItems.isNotEmpty){
-                      _mainApplicationController.checkAuthentication();
-                      }
-                      else{
-                        if(mounted)
-                          {
-                            CustomToasts.errorToast(context, "Add Some Items to Cart..");
-                          }
+                      if (_mainApplicationController.cartItems.isNotEmpty) {
+                        _mainApplicationController.checkAuthentication();
+                      } else {
+                        if (mounted) {
+                          CustomToasts.errorToast(
+                              context, "Add Some Items to Cart..");
+                        }
                       }
                     },
                     child: PrimaryFilledButton(

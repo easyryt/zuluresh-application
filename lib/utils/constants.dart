@@ -6,6 +6,7 @@ class Constants {
   //----------------------------------------------------------------
 
   static const String getAllCategoryListEndPoint = "admin/getAllCategory";
+  static const String getAllBannerListEndPoint = "admin/getAllBanner";
   static const String checkLocationServiceableEndPoint = "user/location";
   static const String generateOtpEndPoint = "user/signup";
   static const String verifyOtpEndPoint = "user/verifiction";

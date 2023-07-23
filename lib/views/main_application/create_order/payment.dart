@@ -85,543 +85,545 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
             Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 7.5.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Payment",
-                            style: GoogleFonts.heebo(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.sp,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Container(
+                  height: 100.h - (2 * AppBar().preferredSize.height),
+                  padding: EdgeInsets.symmetric(horizontal: 7.5.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Payment",
+                              style: GoogleFonts.heebo(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.sp,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 2.h),
-                          Obx(() {
-                            return InkWell(
-                              onTap: () {
-                                _paymentController.paymentMode.value = 0;
-                              },
-                              child: Container(
-                                height: 55,
-                                width: 100.w,
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: 7.5.w),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: _paymentController
-                                                  .paymentMode.value ==
-                                              0
-                                          ? Constants.primaryColor
-                                          : Colors.grey.shade400),
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade200,
-                                      offset: const Offset(0, 0),
-                                      blurRadius: 10,
-                                      spreadRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Online Payment",
-                                      style: GoogleFonts.heebo(
-                                          color: Constants.primaryColor,
-                                          fontSize: 17.sp,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Container(
-                                      height: 15,
-                                      width: 15,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Constants.primaryColor),
+                            SizedBox(height: 2.h),
+                            Obx(() {
+                              return InkWell(
+                                onTap: () {
+                                  _paymentController.paymentMode.value = 0;
+                                },
+                                child: Container(
+                                  height: 55,
+                                  width: 100.w,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 7.5.w),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: _paymentController
+                                                    .paymentMode.value ==
+                                                0
+                                            ? Constants.primaryColor
+                                            : Colors.grey.shade400),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade200,
+                                        offset: const Offset(0, 0),
+                                        blurRadius: 10,
+                                        spreadRadius: 1,
                                       ),
-                                      child: _paymentController
-                                                  .paymentMode.value ==
-                                              0
-                                          ? Center(
-                                              child: Container(
-                                                height: 10,
-                                                width: 10,
-                                                decoration: BoxDecoration(
-                                                  color: Constants.primaryColor,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                          SizedBox(height: 2.h),
-                          Obx(() {
-                            return InkWell(
-                              onTap: () {
-                                _paymentController.paymentMode.value = 1;
-                              },
-                              child: Container(
-                                height: 55,
-                                width: 100.w,
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: 7.5.w),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: _paymentController
-                                                  .paymentMode.value ==
-                                              1
-                                          ? Constants.primaryColor
-                                          : Colors.grey.shade400),
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade200,
-                                      offset: const Offset(0, 0),
-                                      blurRadius: 10,
-                                      spreadRadius: 1,
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Cash on Delivery",
-                                      style: GoogleFonts.heebo(
-                                          color: Constants.primaryColor,
-                                          fontSize: 17.sp,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Container(
-                                      height: 15,
-                                      width: 15,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Constants.primaryColor),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Online Payment",
+                                        style: GoogleFonts.heebo(
+                                            color: Constants.primaryColor,
+                                            fontSize: 17.sp,
+                                            fontWeight: FontWeight.w500),
                                       ),
-                                      // padding: EdgeInsets.all(3),
-                                      child: _paymentController
-                                                  .paymentMode.value ==
-                                              1
-                                          ? Center(
-                                              child: Container(
-                                                height: 10,
-                                                width: 10,
-                                                decoration: BoxDecoration(
-                                                  color: Constants.primaryColor,
-                                                  shape: BoxShape.circle,
+                                      Container(
+                                        height: 15,
+                                        width: 15,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Constants.primaryColor),
+                                        ),
+                                        child: _paymentController
+                                                    .paymentMode.value ==
+                                                0
+                                            ? Center(
+                                                child: Container(
+                                                  height: 10,
+                                                  width: 10,
+                                                  decoration: BoxDecoration(
+                                                    color: Constants.primaryColor,
+                                                    shape: BoxShape.circle,
+                                                  ),
                                                 ),
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      // height: 40,
-                      width: 90.w,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Form(
-                            key: _formKey,
-                            child: Obx(() {
-                              return Expanded(
-                                child: TextFormField(
-                                  controller: _mainApplicationController
-                                      .promoCodeTextEditingController,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return "Invalid Promo";
-                                    }
-                                    return null;
-                                  },
-                                  readOnly: _mainApplicationController
-                                      .showPromo.value,
-                                  decoration: InputDecoration(
-                                    hintStyle: GoogleFonts.heebo(
-                                      fontSize: 16.sp,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    hintText: "Promo Code",
-                                    errorText: "",
-                                    focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Constants.primaryColor)),
-                                    border: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Constants.lightTextColor)),
-                                    enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Constants.lightTextColor)),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 2.5.w,
-                                    ),
+                                              )
+                                            : const SizedBox(),
+                                      )
+                                    ],
                                   ),
                                 ),
                               );
                             }),
-                          ),
-                          SizedBox(width: 2.5.w),
-                          InkWell(
-                            onTap: () {
-                              _mainApplicationController.showPromo.value =
-                                  false;
-                              // _mainApplicationController
-                              //     .promoCodeTextEditingController
-                              //     .clear();
-                              _mainApplicationController
-                                  .getFinalPriceAfterPromo(
-                                      false,
-                                      _mainApplicationController
-                                          .finalPay.value);
-                              _mainApplicationController.promoPay.value = 0;
-                              _mainApplicationController.promoDiscount.value =
-                                  "0";
-                            },
-                            child: Icon(
-                              Icons.delete_outline,
-                              color: Constants.primaryColor,
-                              size: 20.sp,
+                            SizedBox(height: 2.h),
+                            Obx(() {
+                              return InkWell(
+                                onTap: () {
+                                  _paymentController.paymentMode.value = 1;
+                                },
+                                child: Container(
+                                  height: 55,
+                                  width: 100.w,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 7.5.w),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: _paymentController
+                                                    .paymentMode.value ==
+                                                1
+                                            ? Constants.primaryColor
+                                            : Colors.grey.shade400),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade200,
+                                        offset: const Offset(0, 0),
+                                        blurRadius: 10,
+                                        spreadRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Cash on Delivery",
+                                        style: GoogleFonts.heebo(
+                                            color: Constants.primaryColor,
+                                            fontSize: 17.sp,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Container(
+                                        height: 15,
+                                        width: 15,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Constants.primaryColor),
+                                        ),
+                                        // padding: EdgeInsets.all(3),
+                                        child: _paymentController
+                                                    .paymentMode.value ==
+                                                1
+                                            ? Center(
+                                                child: Container(
+                                                  height: 10,
+                                                  width: 10,
+                                                  decoration: BoxDecoration(
+                                                    color: Constants.primaryColor,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 90.w,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Form(
+                              key: _formKey,
+                              child: Obx(() {
+                                return Expanded(
+                                  child: TextFormField(
+                                    controller: _mainApplicationController
+                                        .promoCodeTextEditingController,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return "Invalid Promo";
+                                      }
+                                      return null;
+                                    },
+                                    readOnly: _mainApplicationController
+                                        .showPromo.value,
+                                    decoration: InputDecoration(
+                                      hintStyle: GoogleFonts.heebo(
+                                        fontSize: 16.sp,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      hintText: "Promo Code",
+                                      errorText: "",
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Constants.primaryColor)),
+                                      border: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Constants.lightTextColor)),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Constants.lightTextColor)),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 2.5.w,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
                             ),
-                          ),
-                          SizedBox(width: 2.5.w),
-                          InkWell(
-                            onTap: () async {
-                              if (_formKey.currentState!.validate()) {
-                                if (await _mainApplicationController
+                            SizedBox(width: 2.5.w),
+                            InkWell(
+                              onTap: () {
+                                _mainApplicationController.showPromo.value =
+                                    false;
+                                // _mainApplicationController
+                                //     .promoCodeTextEditingController
+                                //     .clear();
+                                _mainApplicationController
                                     .getFinalPriceAfterPromo(
-                                        true,
+                                        false,
                                         _mainApplicationController
-                                            .finalPay.value)) {
-                                  //
-                                } else {
-                                  if (mounted) {
-                                    CustomToasts.errorToast(
-                                        context, "Invalid Promo Code");
+                                            .finalPay.value);
+                                _mainApplicationController.promoPay.value = 0;
+                                _mainApplicationController.promoDiscount.value =
+                                    "0";
+                              },
+                              child: Icon(
+                                Icons.delete_outline,
+                                color: Constants.primaryColor,
+                                size: 20.sp,
+                              ),
+                            ),
+                            SizedBox(width: 2.5.w),
+                            InkWell(
+                              onTap: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  if (await _mainApplicationController
+                                      .getFinalPriceAfterPromo(
+                                          true,
+                                          _mainApplicationController
+                                              .finalPay.value)) {
+                                    //
+                                  } else {
+                                    if (mounted) {
+                                      CustomToasts.errorToast(
+                                          context, "Invalid Promo Code");
+                                    }
                                   }
                                 }
-                              }
-                            },
-                            child: Container(
-                              width: 30.w,
-                              height: 45,
-                              decoration:
-                                  BoxDecoration(color: Constants.primaryColor),
-                              child: Center(
-                                child: Text(
-                                  "Apply",
-                                  style: GoogleFonts.heebo(
-                                    color: Colors.white,
-                                    fontSize: 17.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                          // Text(
-                          //   "Promo Code",
-                          //   style: GoogleFonts.heebo(
-                          //     fontSize: 16.sp,
-                          //     color: Colors.grey,
-                          //     fontWeight: FontWeight.w400,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 1.h),
-                    Container(
-                      width: 90.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(9),
-                        border: Border.all(color: const Color(0xFF941A49)),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                      // child: FutureBuilder<CartDataModel>(
-                      //     future: _mainApplicationController.getCartData(),
-                      //     builder: (context, snapshot) {
-                      //       if (snapshot.hasData) {
-                      child: Obx(() {
-                        return Column(
-                          children: [
-                            Text(
-                              "Bill Details",
-                              style: GoogleFonts.heebo(
-                                fontSize: 17.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 1.h),
-                            Row(
-                              children: [
-                                Expanded(
+                              },
+                              child: Container(
+                                width: 30.w,
+                                height: 45,
+                                decoration:
+                                    BoxDecoration(color: Constants.primaryColor),
+                                child: Center(
                                   child: Text(
-                                    "Item Total",
+                                    "Apply",
                                     style: GoogleFonts.heebo(
-                                      fontSize: 15.sp,
-                                      color: Colors.black,
+                                      color: Colors.white,
+                                      fontSize: 17.sp,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 25.w,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.currency_rupee,
-                                        color: Colors.black,
-                                        size: 15.sp,
-                                      ),
-                                      Text(
-                                        _mainApplicationController
-                                            .itemTotal.value,
-                                        style: GoogleFonts.heebo(
-                                          fontSize: 15.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                              ),
+                            )
+                            // Text(
+                            //   "Promo Code",
+                            //   style: GoogleFonts.heebo(
+                            //     fontSize: 16.sp,
+                            //     color: Colors.grey,
+                            //     fontWeight: FontWeight.w400,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 1.h),
+                      Container(
+                        width: 90.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9),
+                          border: Border.all(color: const Color(0xFF941A49)),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                        // child: FutureBuilder<CartDataModel>(
+                        //     future: _mainApplicationController.getCartData(),
+                        //     builder: (context, snapshot) {
+                        //       if (snapshot.hasData) {
+                        child: Obx(() {
+                          return Column(
+                            children: [
+                              Text(
+                                "Bill Details",
+                                style: GoogleFonts.heebo(
+                                  fontSize: 17.sp,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Discount",
-                                    style: GoogleFonts.heebo(
-                                      fontSize: 15.sp,
-                                      color: Colors.black,
+                              ),
+                              SizedBox(height: 1.h),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Item Total",
+                                      style: GoogleFonts.heebo(
+                                        fontSize: 15.sp,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 25.w,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.currency_rupee,
-                                        color: Colors.black,
-                                        size: 15.sp,
-                                      ),
-                                      Text(
-                                        _mainApplicationController
-                                            .discount.value,
-                                        style: GoogleFonts.heebo(
-                                          fontSize: 15.sp,
+                                  SizedBox(
+                                    width: 25.w,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.currency_rupee,
                                           color: Colors.black,
+                                          size: 15.sp,
                                         ),
-                                      ),
-                                    ],
+                                        Text(
+                                          _mainApplicationController
+                                              .itemTotal.value,
+                                          style: GoogleFonts.heebo(
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            _mainApplicationController.showPromo.value
-                                ? Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          "PromoCode Discount",
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Discount",
+                                      style: GoogleFonts.heebo(
+                                        fontSize: 15.sp,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 25.w,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.currency_rupee,
+                                          color: Colors.black,
+                                          size: 15.sp,
+                                        ),
+                                        Text(
+                                          _mainApplicationController
+                                              .discount.value,
                                           style: GoogleFonts.heebo(
                                             fontSize: 15.sp,
                                             color: Colors.black,
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 25.w,
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.currency_rupee,
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              _mainApplicationController.showPromo.value
+                                  ? Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            "PromoCode Discount",
+                                            style: GoogleFonts.heebo(
+                                              fontSize: 15.sp,
                                               color: Colors.black,
-                                              size: 15.sp,
                                             ),
-                                            Text(
-                                              _mainApplicationController
-                                                  .promoDiscount.value,
-                                              style: GoogleFonts.heebo(
-                                                fontSize: 15.sp,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 25.w,
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.currency_rupee,
                                                 color: Colors.black,
+                                                size: 15.sp,
                                               ),
-                                            ),
-                                          ],
+                                              Text(
+                                                _mainApplicationController
+                                                    .promoDiscount.value,
+                                                style: GoogleFonts.heebo(
+                                                  fontSize: 15.sp,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
+                                      ],
+                                    )
+                                  : const SizedBox(),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Shipping Charges",
+                                      style: GoogleFonts.heebo(
+                                        fontSize: 15.sp,
+                                        color: Colors.black,
                                       ),
-                                    ],
-                                  )
-                                : const SizedBox(),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Shipping Charges",
-                                    style: GoogleFonts.heebo(
-                                      fontSize: 15.sp,
-                                      color: Colors.black,
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 25.w,
-                                  child: Row(
-                                    children: [
-                                      _mainApplicationController
-                                                  .shipping.value ==
-                                              " Free"
-                                          ? const SizedBox()
-                                          : Icon(
-                                              Icons.currency_rupee,
-                                              color: Colors.black,
-                                              size: 15.sp,
-                                            ),
-                                      Text(
+                                  SizedBox(
+                                    width: 25.w,
+                                    child: Row(
+                                      children: [
                                         _mainApplicationController
-                                            .shipping.value,
-                                        style: GoogleFonts.heebo(
-                                          fontSize: 15.sp,
-                                          color: Colors.black,
+                                                    .shipping.value ==
+                                                " Free"
+                                            ? const SizedBox()
+                                            : Icon(
+                                                Icons.currency_rupee,
+                                                color: Colors.black,
+                                                size: 15.sp,
+                                              ),
+                                        Text(
+                                          _mainApplicationController
+                                              .shipping.value,
+                                          style: GoogleFonts.heebo(
+                                            fontSize: 15.sp,
+                                            color: Colors.black,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Divider(
-                              height: 4.h,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Total",
-                                    style: GoogleFonts.heebo(
-                                      fontSize: 18.sp,
-                                      color: Constants.primaryColor,
-                                      fontWeight: FontWeight.bold,
+                                      ],
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 25.w,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.currency_rupee,
+                                ],
+                              ),
+                              Divider(
+                                height: 4.h,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Total",
+                                      style: GoogleFonts.heebo(
+                                        fontSize: 18.sp,
                                         color: Constants.primaryColor,
-                                        size: 18.sp,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      Text(
-                                        _mainApplicationController
-                                                    .promoPay.value ==
-                                                0.0
-                                            ? _mainApplicationController
-                                                .finalPay.value
-                                                .toString()
-                                            : _mainApplicationController
-                                                .promoPay.value
-                                                .toString(),
-                                        style: GoogleFonts.heebo(
-                                          fontSize: 17.sp,
-                                          color: Constants.primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      }),
-                      // }
-                      //   return Center(
-                      //     child: CircularProgressIndicator(
-                      //       color: Constants.primaryColor,
-                      //     ),
-                      //   );
-                      // }),
-                    ),
-                    SizedBox(height: 2.5.h),
-                    InkWell(
-                      onTap: () async {
-                        // Get.offAll(() => const MainHomeScreen());
-                        if (_paymentController.paymentMode.value == 0) {
-                          CustomToasts.errorToast(context,
-                              "Online Payments are not available now.!");
-                        } else {
-                          bool cod = _paymentController.paymentMode.value == 0
-                              ? false
-                              : true;
-                          SuccessOrderModel data =
-                              await _mainApplicationController.createOrder(
-                                  _mainApplicationController
-                                      .promoCodeTextEditingController.text.toUpperCase(),
-                                  cod);
-                          if (data.sId != null) {
-                            _mainApplicationController
-                                .promoCodeTextEditingController
-                                .clear();
-                            Get.to(() => OrderSuccessScreen(
-                                  successOrderData: data,
-                                ));
-                          } else {
-                            if (mounted) {
-                              CustomToasts.errorToast(
-                                  context, "Unable To Place Order");
-                            }
-                          }
-                        }
-                      },
-                      child: Center(
-                        child: Obx(() {
-                          return PrimaryFilledButton(
-                            width: 80.w,
-                            buttonText:
-                                _paymentController.paymentMode.value == 0
-                                    ? "Pay"
-                                    : "Place Order",
+                                  SizedBox(
+                                    width: 25.w,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.currency_rupee,
+                                          color: Constants.primaryColor,
+                                          size: 18.sp,
+                                        ),
+                                        Text(
+                                          _mainApplicationController
+                                                      .promoPay.value ==
+                                                  0.0
+                                              ? _mainApplicationController
+                                                  .finalPay.value
+                                                  .toString()
+                                              : _mainApplicationController
+                                                  .promoPay.value
+                                                  .toString(),
+                                          style: GoogleFonts.heebo(
+                                            fontSize: 17.sp,
+                                            color: Constants.primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           );
                         }),
+                        // }
+                        //   return Center(
+                        //     child: CircularProgressIndicator(
+                        //       color: Constants.primaryColor,
+                        //     ),
+                        //   );
+                        // }),
                       ),
-                    ),
-                    SizedBox(height: 5.h),
-                  ],
+                      SizedBox(height: 2.5.h),
+                      InkWell(
+                        onTap: () async {
+                          if (_paymentController.paymentMode.value == 0) {
+                            CustomToasts.errorToast(context,
+                                "Online Payments are not available now.!");
+                          } else {
+                            bool cod = _paymentController.paymentMode.value == 0
+                                ? false
+                                : true;
+                            SuccessOrderModel data =
+                                await _mainApplicationController.createOrder(
+                                    _mainApplicationController
+                                        .promoCodeTextEditingController.text.toUpperCase(),
+                                    cod);
+                            if (data.sId != null) {
+                              _mainApplicationController
+                                  .promoCodeTextEditingController
+                                  .clear();
+                              Get.to(() => OrderSuccessScreen(
+                                    successOrderData: data,
+                                  ));
+                            } else {
+                              if (mounted) {
+                                CustomToasts.errorToast(
+                                    context, "Unable To Place Order");
+                              }
+                            }
+                          }
+                        },
+                        child: Center(
+                          child: Obx(() {
+                            return PrimaryFilledButton(
+                              width: 80.w,
+                              buttonText:
+                                  _paymentController.paymentMode.value == 0
+                                      ? "Pay"
+                                      : "Place Order",
+                            );
+                          }),
+                        ),
+                      ),
+                      SizedBox(height: 5.h),
+                    ],
+                  ),
                 ),
               ),
             ),

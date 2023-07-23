@@ -7,6 +7,8 @@ import 'package:zuluresh/models/subcategory_model.dart';
 import 'package:zuluresh/utils/constants.dart';
 import 'package:zuluresh/views/main_application/home/subcategory_items_screen.dart';
 
+import '../../../common/custom_toasts.dart';
+
 class SubCategoryScreen extends StatefulWidget {
   final String categoryId;
   final String categoryName;
@@ -238,6 +240,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
           ],
         ),
       ),
+      floatingActionButton: CustomToasts.viewCartBanner(),
     );
   }
 }

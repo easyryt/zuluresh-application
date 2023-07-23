@@ -11,6 +11,7 @@ import 'package:zuluresh/views/main_application/account/notifications/notificati
 import 'package:zuluresh/views/main_application/account/orders/orders_screen.dart';
 import 'package:zuluresh/views/main_application/address/select_address.dart';
 import 'package:zuluresh/views/set_location.dart';
+import 'package:zuluresh/views/update_profile.dart';
 
 import 'contacts/contact_us.dart';
 
@@ -50,7 +51,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      // Get.to(()=>)
+                      Get.to(()=> const UpdateProfileScreen());
                     },
                     child: singleTile(FontAwesome5.user_circle, "My Profile"),
                   ),

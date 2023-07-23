@@ -423,7 +423,7 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                       children: [
                                         tabs("Today", 0),
                                         tabs("Tomorrow", 1),
-                                        tabs("12 June", 2),
+                                        tabs("${DateTime.now().day + 2} June", 2),
                                       ],
                                     ),
                                   ),

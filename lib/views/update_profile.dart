@@ -33,10 +33,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               child: Row(
                 children: [
                   SizedBox(width: 5.w),
-                  Icon(
-                    Icons.arrow_back_ios_new_sharp,
-                    size: 19.sp,
-                    color: const Color(0xFF941A49),
+                  InkWell(
+                    onTap: (){
+                      Get.back();
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios_new_sharp,
+                      size: 19.sp,
+                      color: const Color(0xFF941A49),
+                    ),
                   ),
                   Expanded(
                     child: Center(
@@ -344,7 +349,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        // Get.to(() => const ChooseLocation());
+                        Get.back();
                       },
                       child: PrimaryFilledButton(
                         width: 90.w,

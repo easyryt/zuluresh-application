@@ -15,12 +15,14 @@ import 'package:zuluresh/views/main_application/account/account_screen.dart';
 import 'package:zuluresh/views/main_application/categories/categories_screen.dart';
 import 'package:zuluresh/views/main_application/home/home.dart';
 import 'package:dio/dio.dart' as Dio;
+import '../models/banner_model.dart';
 import '../models/cart_data_model.dart';
 import '../models/category_model.dart';
 import '../views/main_application/address/choose_delivery.dart';
 
 class MainApplicationController extends GetxController {
   var pageIdx = 0.obs;
+  var bannerIdx = 0.obs;
 
   List<Widget> homeWidgets = [
     const HomeScreen(),
@@ -28,6 +30,18 @@ class MainApplicationController extends GetxController {
     const CartScreen(),
     const AccountScreen(),
   ];
+
+  Future<List<BannerModel>> getAllBanners() async {
+    Dio.Response response =
+        await Global.apiClient.getData(Constants.getAllBannerListEndPoint, null);
+
+    if (response.statusCode == 200) {
+      final List categoryList = response.data["data"];
+      return categoryList.map((e) => BannerModel.fromJson(e)).toList();
+    } else {
+      throw Exception(response.statusMessage);
+    }
+  }
 
   Future<List<CategoryModel>> getAllCategories() async {
     Dio.Response response =
@@ -234,14 +248,14 @@ class MainApplicationController extends GetxController {
 
   getSumOfProducts() {
     var totalMrp =
-        cartItems.fold(0, (sum, item) => sum + item['data'].price as int);
+        cartItems.fold(0, (sum, item) => sum + (item['data'].price*item['qty']) as int);
 
     return totalMrp;
   }
 
   getDiscountSumOfProducts() {
     var totalDiscount =
-    cartItems.fold(0, (sum, item) => sum + item['data'].mRP as int);
+    cartItems.fold(0, (sum, item) => sum + (item['data'].mRP*item['qty']) as int);
 
     return totalDiscount - getSumOfProducts();
   }

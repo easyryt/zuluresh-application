@@ -25,6 +25,7 @@ class _SplashState extends State<Splash> {
     if (Global.storageServices.getString("pin_code") != null &&
         Global.storageServices.getString("pin_location") != null) {
       if (Global.storageServices.getString("x-auth-token") != null) {
+        print(Global.storageServices.getString("x-auth-token"));
         Global.apiClient
             .updateHeader(Global.storageServices.getString("x-auth-token"));
       }

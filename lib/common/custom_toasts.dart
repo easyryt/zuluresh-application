@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:miladtech_flutter_icons/miladtech_flutter_icons.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:zuluresh/controllers/main_application_controller.dart';
 import 'package:zuluresh/utils/constants.dart';
 
+import '../services/global.dart';
+import '../views/main_application/main_home.dart';
+
 class CustomToasts {
+
   static void showToast(BuildContext context, String text) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
@@ -82,5 +88,100 @@ class CustomToasts {
         duration: const Duration(seconds: 5),
       ),
     );
+  }
+
+  static Widget viewCartBanner(){
+    final MainApplicationController mainApplicationController = Get.find();
+
+    return Obx(() {
+      return SizedBox(
+        child: Global.storageServices.getString("x-auth-token") !=
+            null
+            ? mainApplicationController.cartItems.isNotEmpty
+            ? Container(
+          width: 90.w,
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                blurRadius: 10,
+                spreadRadius: 5,
+                offset: const Offset(0, 0),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Items in Cart",
+                style: GoogleFonts.heebo(
+                  color: Constants.primaryColor,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  mainApplicationController.pageIdx.value = 2;
+                  Get.to(() => const MainHomeScreen());
+                },
+                child: Text(
+                  "View Cart",
+                  style: GoogleFonts.heebo(
+                    color: Constants.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+            : const SizedBox()
+            : mainApplicationController.cartItems.isNotEmpty
+            ? Container(
+          width: 90.w,
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                blurRadius: 10,
+                spreadRadius: 5,
+                offset: const Offset(0, 0),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Items in Cart",
+                style: GoogleFonts.heebo(
+                  color: Constants.primaryColor,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  mainApplicationController.pageIdx.value = 2;
+                  Get.to(() => const MainHomeScreen());
+                },
+                child: Text(
+                  "View Cart",
+                  style: GoogleFonts.heebo(
+                    color: Constants.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+            : const SizedBox(),
+      );
+    });
   }
 }

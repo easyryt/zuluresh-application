@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:miladtech_flutter_icons/miladtech_flutter_icons.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:zuluresh/common/button/primary_outlined_button.dart';
 import 'package:zuluresh/controllers/main_application_controller.dart';
-import 'package:zuluresh/controllers/subcategory/subcategory_controller.dart';
-import 'package:zuluresh/models/single_product_model.dart';
-import 'package:zuluresh/utils/constants.dart';
+import 'package:zuluresh/views/main_application/main_home.dart';
 
 import '../../../common/custom_toasts.dart';
+import '../../../models/best_seller_deals_combos_single_products.dart';
 import '../../../services/global.dart';
+import '../../../utils/constants.dart';
 
-class SubCategoryItemScreen extends StatefulWidget {
-  final String subCategoryName;
-  final String categoryName;
-  final bool back;
+class HomeOfferScreen extends StatefulWidget {
+  final String endpoints;
 
-  const SubCategoryItemScreen({
+  const HomeOfferScreen({
     super.key,
-    required this.subCategoryName,
-    required this.categoryName,
-    required this.back,
+    required this.endpoints,
   });
 
   @override
-  State<SubCategoryItemScreen> createState() => _SubCategoryItemScreenState();
+  State<HomeOfferScreen> createState() => _HomeOfferScreenState();
 }
 
-class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
-  final SubCategoryController _subCategoryController = Get.find();
+class _HomeOfferScreenState extends State<HomeOfferScreen> {
   final MainApplicationController _mainApplicationController = Get.find();
 
   @override
@@ -38,8 +31,7 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
       body: SizedBox(
         height: 100.h,
         width: 100.w,
-        child: widget.back
-            ? Column(
+        child: Column(
           children: [
             SizedBox(height: AppBar().preferredSize.height),
             SizedBox(
@@ -49,7 +41,7 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                 children: [
                   SizedBox(width: 5.w),
                   InkWell(
-                    onTap: () {
+                    onTap: (){
                       Get.back();
                     },
                     child: Icon(
@@ -61,12 +53,10 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                   Expanded(
                     child: Center(
                       child: Text(
-                        "${widget.categoryName} - ${widget.subCategoryName}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        widget.endpoints == Constants.bestCombosProductsListEndPoint ? "Best Combos" : widget.endpoints == Constants.bestSellerProductsListEndPoint ? "Best Sellers" : "Best Deals",
                         style: GoogleFonts.heebo(
                           fontWeight: FontWeight.w500,
-                          fontSize: 17.sp,
+                          fontSize: 18.sp,
                           color: const Color(0xFF941A49),
                         ),
                       ),
@@ -78,21 +68,15 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
             ),
             Expanded(child: listData()),
           ],
-        )
-            : Obx(() {
-          return listData();
-        }),
+        ),
       ),
-      floatingActionButton: widget.back ? CustomToasts.viewCartBanner() : const SizedBox(),
+      floatingActionButton: CustomToasts.viewCartBanner(),
     );
   }
 
   Widget listData() {
-    return FutureBuilder<List<SingleProductModel>>(
-      future: _subCategoryController.getSubCategoryProductList(
-        widget.categoryName,
-        _subCategoryController.subCategoryName.value,
-      ),
+    return FutureBuilder<List<BestSellerDealsCombosSingleProductModel>>(
+      future: _mainApplicationController.getBestSellerDealsCombos(widget.endpoints),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
@@ -132,9 +116,8 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(2.5.w),
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      snapshot.data![index].productImg![0]
-                                          .url!),
+                                  image: NetworkImage(snapshot
+                                      .data![index].productImg![0].url!),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -153,7 +136,7 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                             ),
                           ),
                           Text(
-                            snapshot.data![index].pieces.toString(),
+                            snapshot.data![index].mRP.toString(),
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
@@ -191,101 +174,104 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                                 ),
                                 containsItemWithId(snapshot.data![index].sId!)
                                     ? InkWell(
-                                  onTap: () async {
-                                    if (Global.storageServices
-                                        .getString("x-auth-token") !=
-                                        null) {
-                                      if (await _mainApplicationController
-                                          .deleteItemFromCart(
-                                          snapshot.data![index].sId!)) {
-                                        _mainApplicationController
-                                            .deleteItemById(
-                                            snapshot.data![index].sId!);
-                                        _mainApplicationController.cartItems
-                                            .refresh();
-                                      } else {
-                                        if (mounted) {
-                                          CustomToasts.errorToast(context,
-                                              "Unable to Delete Item from Cart..");
-                                        }
-                                      }
-                                    } else {
-                                      _mainApplicationController
-                                          .deleteItemById(
-                                          snapshot.data![index].sId!);
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(1.w),
-                                      border: Border.all(
-                                          color: Constants.primaryColor),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 1.5.w),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.delete_outline,
-                                        color: Constants.primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                )
+                                        onTap: () async {
+                                          if (Global.storageServices
+                                                  .getString("x-auth-token") !=
+                                              null) {
+                                            if (await _mainApplicationController
+                                                .deleteItemFromCart(snapshot
+                                                    .data![index].sId!)) {
+                                              _mainApplicationController
+                                                  .deleteItemById(snapshot
+                                                      .data![index].sId!);
+                                              _mainApplicationController
+                                                  .cartItems
+                                                  .refresh();
+                                            } else {
+                                              if (mounted) {
+                                                CustomToasts.errorToast(context,
+                                                    "Unable to Delete Item from Cart..");
+                                              }
+                                            }
+                                          } else {
+                                            _mainApplicationController
+                                                .deleteItemById(
+                                                    snapshot.data![index].sId!);
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(1.w),
+                                            border: Border.all(
+                                                color: Constants.primaryColor),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 1.5.w),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.delete_outline,
+                                              color: Constants.primaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      )
                                     : InkWell(
-                                  onTap: () async {
-                                    if (Global.storageServices
-                                        .getString("x-auth-token") !=
-                                        null) {
-                                      if (await _mainApplicationController
-                                          .addItemToCart(
-                                          snapshot.data![index].sId!)) {
-                                        _mainApplicationController.cartItems
-                                            .add({
-                                          "id": snapshot.data![index].sId,
-                                          "data": snapshot.data![index],
-                                          "qty": 1,
-                                        });
-                                        _mainApplicationController.cartItems
-                                            .refresh();
-                                      } else {
-                                        if (mounted) {
-                                          CustomToasts.errorToast(context,
-                                              "Unable to add Item from Cart..");
-                                        }
-                                      }
-                                    } else {
-                                      _mainApplicationController.cartItems
-                                          .add({
-                                        "id": snapshot.data![index].sId,
-                                        "data": snapshot.data![index],
-                                        "qty": 1,
-                                      });
-                                      _mainApplicationController.cartItems
-                                          .refresh();
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(1.w),
-                                      border: Border.all(
-                                          color: Constants.primaryColor),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5.w),
-                                    child: Center(
-                                      child: Text(
-                                        "Add",
-                                        style: GoogleFonts.heebo(
-                                          color: Constants.primaryColor,
+                                        onTap: () async {
+                                          if (Global.storageServices
+                                                  .getString("x-auth-token") !=
+                                              null) {
+                                            if (await _mainApplicationController
+                                                .addItemToCart(snapshot
+                                                    .data![index].sId!)) {
+                                              _mainApplicationController
+                                                  .cartItems
+                                                  .add({
+                                                "id": snapshot.data![index].sId,
+                                                "data": snapshot.data![index],
+                                                "qty": 1,
+                                              });
+                                              _mainApplicationController
+                                                  .cartItems
+                                                  .refresh();
+                                            } else {
+                                              if (mounted) {
+                                                CustomToasts.errorToast(context,
+                                                    "Unable to add Item from Cart..");
+                                              }
+                                            }
+                                          } else {
+                                            _mainApplicationController.cartItems
+                                                .add({
+                                              "id": snapshot.data![index].sId,
+                                              "data": snapshot.data![index],
+                                              "qty": 1,
+                                            });
+                                            _mainApplicationController.cartItems
+                                                .refresh();
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(1.w),
+                                            border: Border.all(
+                                                color: Constants.primaryColor),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w),
+                                          child: Center(
+                                            child: Text(
+                                              "Add",
+                                              style: GoogleFonts.heebo(
+                                                color: Constants.primaryColor,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                                 // Container(
                                 //   height: 30,
                                 //   decoration: BoxDecoration(
@@ -319,7 +305,6 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
       },
     );
   }
-
 
   bool containsItemWithId(String id) {
     return _mainApplicationController.cartItems.any((item) => item["id"] == id);
