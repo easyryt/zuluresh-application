@@ -11,9 +11,10 @@ import 'package:zuluresh/views/main_application/address/select_address.dart';
 import '../../../controllers/address/edit_address_controller.dart';
 
 class EditAddressScreen extends StatefulWidget {
+  final String id;
   final bool update;
 
-  const EditAddressScreen({super.key, required this.update});
+  const EditAddressScreen({super.key, required this.update, required this.id});
 
   @override
   State<EditAddressScreen> createState() => _EditAddressScreenState();
@@ -23,6 +24,17 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
   final EditAddressController _editAddressController =
       Get.put(EditAddressController());
   final _addressFormKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    () async {
+      if (widget.update) {
+        _editAddressController.loadAddressData(widget.id);
+      }
+    }();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,36 +122,36 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 1.5.h),
-                              SizedBox(
-                                width: 90.w,
-                                child: TextFormField(
-                                  validator: (value) {
-                                    if (value!.length < 3) {
-                                      return "Invalid Address";
-                                    }
-                                    return null;
-                                  },
-                                  controller: _editAddressController
-                                      .deliveryAddressTextController,
-                                  cursorColor: Constants.primaryColor,
-                                  decoration: InputDecoration(
-                                    labelText: "Enter Delivery Address",
-                                    labelStyle: GoogleFonts.heebo(
-                                        color: Constants.lightTextColor),
-                                    floatingLabelStyle: GoogleFonts.heebo(
-                                        color: Constants.primaryColor),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Constants.lightTextColor),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Constants.primaryColor),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // SizedBox(height: 1.5.h),
+                              // SizedBox(
+                              //   width: 90.w,
+                              //   child: TextFormField(
+                              //     validator: (value) {
+                              //       if (value!.length < 3) {
+                              //         return "Invalid Address";
+                              //       }
+                              //       return null;
+                              //     },
+                              //     controller: _editAddressController
+                              //         .deliveryAddressTextController,
+                              //     cursorColor: Constants.primaryColor,
+                              //     decoration: InputDecoration(
+                              //       labelText: "Enter Delivery Address",
+                              //       labelStyle: GoogleFonts.heebo(
+                              //           color: Constants.lightTextColor),
+                              //       floatingLabelStyle: GoogleFonts.heebo(
+                              //           color: Constants.primaryColor),
+                              //       enabledBorder: UnderlineInputBorder(
+                              //         borderSide: BorderSide(
+                              //             color: Constants.lightTextColor),
+                              //       ),
+                              //       focusedBorder: UnderlineInputBorder(
+                              //         borderSide: BorderSide(
+                              //             color: Constants.primaryColor),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                               SizedBox(height: 1.5.h),
                               SizedBox(
                                 width: 90.w,
@@ -588,6 +600,15 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                       onTap: () async {
                         if (_addressFormKey.currentState!.validate()) {
                           if (widget.update) {
+                            if (await _editAddressController
+                                .updateAddress(widget.id)) {
+                              Get.off(() => const SelectAddressScreen());
+                              if (mounted) {
+                                CustomToasts.successToast(
+                                    context, "Address Updated successfully..");
+                                setState(() {});
+                              }
+                            }
                           } else {
                             if (await _editAddressController.addNewAddress()) {
                               if (mounted) {
@@ -598,8 +619,8 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                               }
                             } else {
                               if (mounted) {
-                                CustomToasts.errorToast(context,
-                                    "Pincode is not Servable..!!");
+                                CustomToasts.errorToast(
+                                    context, "Pincode is not Servable..!!");
                               }
                             }
                           }

@@ -20,11 +20,6 @@ class _CartScreenState extends State<CartScreen> {
   final MainApplicationController _mainApplicationController = Get.find();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -123,24 +118,82 @@ class _CartScreenState extends State<CartScreen> {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
-                                                        Text(
-                                                          snapshot
-                                                              .data!
-                                                              .productsData![
-                                                                  index]
-                                                              .title!,
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 1,
-                                                          style:
-                                                              GoogleFonts.heebo(
-                                                            color: Colors.black,
-                                                            fontSize: 16.sp,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
+                                                        Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: Text(
+                                                                snapshot
+                                                                    .data!
+                                                                    .productsData![
+                                                                        index]
+                                                                    .title!,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                                style:
+                                                                    GoogleFonts
+                                                                        .heebo(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      16.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () async {
+                                                                if (Global
+                                                                        .storageServices
+                                                                        .getString(
+                                                                            "x-auth-token") !=
+                                                                    null) {
+                                                                  if (await _mainApplicationController.deleteItemFromCart(snapshot
+                                                                      .data!
+                                                                      .productsData![
+                                                                          index]
+                                                                      .sId!, "0")) {
+                                                                    _mainApplicationController.deleteItemById(snapshot
+                                                                        .data!
+                                                                        .productsData![
+                                                                            index]
+                                                                        .sId!);
+                                                                    _mainApplicationController
+                                                                        .cartItems
+                                                                        .refresh();
+                                                                    setState(() {
+
+                                                                    });
+                                                                  } else {
+                                                                    if (mounted) {
+                                                                      CustomToasts.errorToast(
+                                                                          context,
+                                                                          "Unable to Delete Item from Cart..");
+                                                                    }
+                                                                  }
+                                                                } else {
+                                                                  _mainApplicationController
+                                                                      .deleteItemById(snapshot
+                                                                          .data!
+                                                                          .productsData![
+                                                                              index]
+                                                                          .sId!);
+                                                                }
+                                                              },
+                                                              child: Icon(
+                                                                Icons
+                                                                    .delete_outline,
+                                                                color: Constants
+                                                                    .primaryColor,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                         Text(
                                                           snapshot
@@ -242,10 +295,10 @@ class _CartScreenState extends State<CartScreen> {
                                                                       if (await _mainApplicationController.deleteItemFromCart(snapshot
                                                                           .data!
                                                                           .productsData![
-                                                                      index]
-                                                                          .sId!)) {
+                                                                              index]
+                                                                          .sId!, null)) {
                                                                         setState(
-                                                                                () {});
+                                                                            () {});
                                                                       } else {
                                                                         if (mounted) {
                                                                           CustomToasts.errorToast(
@@ -260,14 +313,14 @@ class _CartScreenState extends State<CartScreen> {
                                                                       color: Constants
                                                                           .primaryColor,
                                                                       size:
-                                                                      17.sp,
+                                                                          17.sp,
                                                                     ),
                                                                   ),
                                                                   Text(
                                                                     snapshot
                                                                         .data!
                                                                         .productsData![
-                                                                    index]
+                                                                            index]
                                                                         .productQuantity
                                                                         .toString(),
                                                                     style: GoogleFonts
@@ -275,10 +328,10 @@ class _CartScreenState extends State<CartScreen> {
                                                                       color: Constants
                                                                           .primaryColor,
                                                                       fontSize:
-                                                                      16.sp,
+                                                                          16.sp,
                                                                       fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
+                                                                          FontWeight
+                                                                              .bold,
                                                                     ),
                                                                   ),
                                                                   InkWell(
@@ -408,21 +461,37 @@ class _CartScreenState extends State<CartScreen> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text(
-                                                    _mainApplicationController
-                                                        .cartItems[index]
-                                                            ["data"]
-                                                        .title,
-                                                    textAlign: TextAlign.start,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    style: GoogleFonts.heebo(
-                                                      color: Colors.black,
-                                                      fontSize: 16.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          _mainApplicationController
+                                                              .cartItems[index]
+                                                                  ["data"]
+                                                              .title,
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 1,
+                                                          style:
+                                                              GoogleFonts.heebo(
+                                                            color: Colors.black,
+                                                            fontSize: 16.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {},
+                                                        child: Icon(
+                                                          Icons.delete_outline,
+                                                          color: Constants
+                                                              .primaryColor,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                   Text(
                                                     _mainApplicationController
@@ -512,10 +581,10 @@ class _CartScreenState extends State<CartScreen> {
                                                               onTap: () {
                                                                 _mainApplicationController
                                                                     .decrementQtyById(
-                                                                    _mainApplicationController
-                                                                        .cartItems[index]
-                                                                    [
-                                                                    "id"]);
+                                                                        _mainApplicationController
+                                                                                .cartItems[index]
+                                                                            [
+                                                                            "id"]);
                                                                 _mainApplicationController
                                                                     .cartItems
                                                                     .refresh();
@@ -530,8 +599,8 @@ class _CartScreenState extends State<CartScreen> {
                                                             Text(
                                                               _mainApplicationController
                                                                   .cartItems[
-                                                              index]
-                                                              ["qty"]
+                                                                      index]
+                                                                      ["qty"]
                                                                   .toString(),
                                                               style: GoogleFonts
                                                                   .heebo(
@@ -539,8 +608,8 @@ class _CartScreenState extends State<CartScreen> {
                                                                     .primaryColor,
                                                                 fontSize: 16.sp,
                                                                 fontWeight:
-                                                                FontWeight
-                                                                    .bold,
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
                                                             InkWell(

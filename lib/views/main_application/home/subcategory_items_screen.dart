@@ -10,6 +10,7 @@ import 'package:zuluresh/models/single_product_model.dart';
 import 'package:zuluresh/utils/constants.dart';
 
 import '../../../common/custom_toasts.dart';
+import '../../../models/cart_data_model.dart';
 import '../../../services/global.dart';
 
 class SubCategoryItemScreen extends StatefulWidget {
@@ -33,6 +34,31 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
   final MainApplicationController _mainApplicationController = Get.find();
 
   @override
+  void initState() {
+    super.initState();
+    () async {
+      loadCartData();
+    }();
+  }
+
+  loadCartData() async {
+    if (Global.storageServices.getString("x-auth-token") != null) {
+      CartDataModel cartData = await _mainApplicationController.getCartData();
+      _mainApplicationController.cartItems.clear();
+      for (var item in cartData.productsData!) {
+        _mainApplicationController.cartItems.add({
+          "id": item.sId,
+          "data": item,
+          "qty": item.productQuantity,
+        });
+      }
+      setState(() {
+        _mainApplicationController.cartItems.refresh();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
@@ -40,50 +66,51 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
         width: 100.w,
         child: widget.back
             ? Column(
-          children: [
-            SizedBox(height: AppBar().preferredSize.height),
-            SizedBox(
-              height: AppBar().preferredSize.height,
-              width: 100.w,
-              child: Row(
                 children: [
-                  SizedBox(width: 5.w),
-                  InkWell(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Icon(
-                      Icons.arrow_back_ios_new_sharp,
-                      size: 19.sp,
-                      color: const Color(0xFF941A49),
-                    ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        "${widget.categoryName} - ${widget.subCategoryName}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.heebo(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17.sp,
-                          color: const Color(0xFF941A49),
+                  SizedBox(height: AppBar().preferredSize.height),
+                  SizedBox(
+                    height: AppBar().preferredSize.height,
+                    width: 100.w,
+                    child: Row(
+                      children: [
+                        SizedBox(width: 5.w),
+                        InkWell(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Icon(
+                            Icons.arrow_back_ios_new_sharp,
+                            size: 19.sp,
+                            color: const Color(0xFF941A49),
+                          ),
                         ),
-                      ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              "${widget.categoryName} - ${widget.subCategoryName}",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.heebo(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17.sp,
+                                color: const Color(0xFF941A49),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 5.w),
+                      ],
                     ),
                   ),
-                  SizedBox(width: 5.w),
+                  Expanded(child: listData()),
                 ],
-              ),
-            ),
-            Expanded(child: listData()),
-          ],
-        )
+              )
             : Obx(() {
-          return listData();
-        }),
+                return listData();
+              }),
       ),
-      floatingActionButton: widget.back ? CustomToasts.viewCartBanner() : const SizedBox(),
+      floatingActionButton:
+          widget.back ? CustomToasts.viewCartBanner() : const SizedBox(),
     );
   }
 
@@ -132,9 +159,8 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(2.5.w),
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      snapshot.data![index].productImg![0]
-                                          .url!),
+                                  image: NetworkImage(snapshot
+                                      .data![index].productImg![0].url!),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -191,101 +217,206 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                                 ),
                                 containsItemWithId(snapshot.data![index].sId!)
                                     ? InkWell(
-                                  onTap: () async {
-                                    if (Global.storageServices
-                                        .getString("x-auth-token") !=
-                                        null) {
-                                      if (await _mainApplicationController
-                                          .deleteItemFromCart(
-                                          snapshot.data![index].sId!)) {
-                                        _mainApplicationController
-                                            .deleteItemById(
-                                            snapshot.data![index].sId!);
-                                        _mainApplicationController.cartItems
-                                            .refresh();
-                                      } else {
-                                        if (mounted) {
-                                          CustomToasts.errorToast(context,
-                                              "Unable to Delete Item from Cart..");
-                                        }
-                                      }
-                                    } else {
-                                      _mainApplicationController
-                                          .deleteItemById(
-                                          snapshot.data![index].sId!);
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(1.w),
-                                      border: Border.all(
-                                          color: Constants.primaryColor),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 1.5.w),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.delete_outline,
-                                        color: Constants.primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                )
+                                        // onTap: () async {
+                                        //   if (Global.storageServices
+                                        //       .getString("x-auth-token") !=
+                                        //       null) {
+                                        //     if (await _mainApplicationController
+                                        //         .deleteItemFromCart(
+                                        //         snapshot.data![index].sId!)) {
+                                        //       _mainApplicationController
+                                        //           .deleteItemById(
+                                        //           snapshot.data![index].sId!);
+                                        //       _mainApplicationController.cartItems
+                                        //           .refresh();
+                                        //     } else {
+                                        //       if (mounted) {
+                                        //         CustomToasts.errorToast(context,
+                                        //             "Unable to Delete Item from Cart..");
+                                        //       }
+                                        //     }
+                                        //   } else {
+                                        //     _mainApplicationController
+                                        //         .deleteItemById(
+                                        //         snapshot.data![index].sId!);
+                                        //   }
+                                        // },
+                                        child: Container(
+                                        height: 30,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(1.w),
+                                          border: Border.all(
+                                              color: Constants.primaryColor),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 2.w),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InkWell(
+                                              onTap: () async {
+                                                if (Global.storageServices
+                                                        .getString(
+                                                            "x-auth-token") !=
+                                                    null) {
+                                                  if (await _mainApplicationController
+                                                      .deleteItemFromCart(
+                                                          snapshot.data![index]
+                                                              .sId!, null)) {
+                                                    loadCartData();
+                                                    _mainApplicationController
+                                                        .cartItems
+                                                        .refresh();
+                                                    setState(() {});
+                                                  } else {
+                                                    if (mounted) {
+                                                      CustomToasts.errorToast(
+                                                          context,
+                                                          "Unable to Decrease Quantity");
+                                                    }
+                                                  }
+                                                } else {
+                                                  _mainApplicationController
+                                                      .decrementQtyById(snapshot
+                                                          .data![index].sId!);
+                                                  _mainApplicationController
+                                                      .cartItems
+                                                      .refresh();
+                                                }
+                                              },
+                                              child: Icon(
+                                                Icons.remove,
+                                                color: Constants.primaryColor,
+                                                size: 17.sp,
+                                              ),
+                                            ),
+                                            Obx(() {
+                                              return Text(
+                                                // "${_mainApplicationController.homeQty}",
+                                                "${getQuantityById(snapshot.data![index].sId!)}",
+                                                style: GoogleFonts.heebo(
+                                                  color: Constants.primaryColor,
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              );
+                                            }),
+                                            InkWell(
+                                              onTap: () async {
+                                                if (Global.storageServices
+                                                        .getString(
+                                                            "x-auth-token") !=
+                                                    null) {
+                                                  if (await _mainApplicationController
+                                                      .addItemToCart(snapshot
+                                                          .data![index].sId!)) {
+                                                    loadCartData();
+                                                    _mainApplicationController
+                                                        .cartItems
+                                                        .refresh();
+                                                    setState(() {});
+                                                  } else {
+                                                    if (mounted) {
+                                                      CustomToasts.errorToast(
+                                                          context,
+                                                          "Unable to Increase Quantity");
+                                                    }
+                                                  }
+                                                } else {
+                                                  _mainApplicationController
+                                                      .incrementQtyById(snapshot
+                                                          .data![index].sId!);
+                                                  _mainApplicationController
+                                                      .cartItems
+                                                      .refresh();
+                                                }
+                                              },
+                                              child: Icon(
+                                                Icons.add,
+                                                color: Constants.primaryColor,
+                                                size: 17.sp,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+
+                                        // Container(
+                                        //   height: 30,
+                                        //   decoration: BoxDecoration(
+                                        //     borderRadius:
+                                        //     BorderRadius.circular(1.w),
+                                        //     border: Border.all(
+                                        //         color: Constants.primaryColor),
+                                        //   ),
+                                        //   padding: EdgeInsets.symmetric(
+                                        //       horizontal: 1.5.w),
+                                        //   child: Center(
+                                        //     child: Icon(
+                                        //       Icons.delete_outline,
+                                        //       color: Constants.primaryColor,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        )
                                     : InkWell(
-                                  onTap: () async {
-                                    if (Global.storageServices
-                                        .getString("x-auth-token") !=
-                                        null) {
-                                      if (await _mainApplicationController
-                                          .addItemToCart(
-                                          snapshot.data![index].sId!)) {
-                                        _mainApplicationController.cartItems
-                                            .add({
-                                          "id": snapshot.data![index].sId,
-                                          "data": snapshot.data![index],
-                                          "qty": 1,
-                                        });
-                                        _mainApplicationController.cartItems
-                                            .refresh();
-                                      } else {
-                                        if (mounted) {
-                                          CustomToasts.errorToast(context,
-                                              "Unable to add Item from Cart..");
-                                        }
-                                      }
-                                    } else {
-                                      _mainApplicationController.cartItems
-                                          .add({
-                                        "id": snapshot.data![index].sId,
-                                        "data": snapshot.data![index],
-                                        "qty": 1,
-                                      });
-                                      _mainApplicationController.cartItems
-                                          .refresh();
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(1.w),
-                                      border: Border.all(
-                                          color: Constants.primaryColor),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5.w),
-                                    child: Center(
-                                      child: Text(
-                                        "Add",
-                                        style: GoogleFonts.heebo(
-                                          color: Constants.primaryColor,
+                                        onTap: () async {
+                                          if (Global.storageServices
+                                                  .getString("x-auth-token") !=
+                                              null) {
+                                            if (await _mainApplicationController
+                                                .addItemToCart(snapshot
+                                                    .data![index].sId!)) {
+                                              _mainApplicationController
+                                                  .cartItems
+                                                  .add({
+                                                "id": snapshot.data![index].sId,
+                                                "data": snapshot.data![index],
+                                                "qty": 1,
+                                              });
+                                              _mainApplicationController
+                                                  .cartItems
+                                                  .refresh();
+                                            } else {
+                                              if (mounted) {
+                                                CustomToasts.errorToast(context,
+                                                    "Unable to add Item from Cart..");
+                                              }
+                                            }
+                                          } else {
+                                            _mainApplicationController.cartItems
+                                                .add({
+                                              "id": snapshot.data![index].sId,
+                                              "data": snapshot.data![index],
+                                              "qty": 1,
+                                            });
+                                            _mainApplicationController.cartItems
+                                                .refresh();
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(1.w),
+                                            border: Border.all(
+                                                color: Constants.primaryColor),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5.w),
+                                          child: Center(
+                                            child: Text(
+                                              "Add",
+                                              style: GoogleFonts.heebo(
+                                                color: Constants.primaryColor,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                                 // Container(
                                 //   height: 30,
                                 //   decoration: BoxDecoration(
@@ -320,8 +451,16 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
     );
   }
 
-
   bool containsItemWithId(String id) {
     return _mainApplicationController.cartItems.any((item) => item["id"] == id);
+  }
+
+  int getQuantityById(String itemId) {
+    var item = _mainApplicationController.cartItems.firstWhere(
+      (item) => item["id"] == itemId,
+      orElse: () => null,
+    );
+
+    return item != null ? item["qty"] : 0;
   }
 }

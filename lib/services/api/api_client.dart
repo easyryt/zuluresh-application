@@ -92,6 +92,27 @@ class ApiClient {
     }
   }
 
+  Future<Response> deleteData(String path, Map<String, dynamic>? headers) async {
+    try {
+      Response response = await _dio
+          .delete(
+            _baseUrl + path,
+            options: Options(headers: headers ?? mainHeaders),
+          )
+          .timeout(const Duration(seconds: 50));
+      return response;
+    } catch (e) {
+      print(e.toString());
+      return Response(
+        statusCode: 1,
+        requestOptions: RequestOptions(
+          headers: headers,
+          baseUrl: _baseUrl + path,
+        ),
+      );
+    }
+  }
+
   Future<Response> getDataWithParams(String path, Map<String, dynamic>? headers,
       Map<String, dynamic>? params) async {
     try {

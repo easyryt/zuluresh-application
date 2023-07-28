@@ -68,7 +68,7 @@ class ChooseLocationController extends GetxController {
       } else {
         Global.storageServices.setString("pin_code", pinCode.value);
       }
-      Global.storageServices.setString("pin_location", pinLocation.value);
+      Global.storageServices.setString("pin_location", response.data["data"]["state"]);
       return true;
     } else {
       return false;

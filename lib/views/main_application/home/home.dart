@@ -33,22 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     () async {
-      if (Global.storageServices.getString("x-auth-token") != null) {
-        CartDataModel cartData = await _mainApplicationController.getCartData();
-        if (cartData.productsData!.isEmpty) {
-          _mainApplicationController.cartItems.clear();
-        }
-        for (var item in cartData.productsData!) {
-          _mainApplicationController.cartItems.add({
-            "id": item.sId,
-            "data": item,
-            "qty": item.productQuantity,
-          });
-        }
-        setState(() {});
+      loadCartData();
+    }();
+  }
+
+  loadCartData() async {
+    if (Global.storageServices.getString("x-auth-token") != null) {
+      CartDataModel cartData = await _mainApplicationController.getCartData();
+      _mainApplicationController.cartItems.clear();
+      for (var item in cartData.productsData!) {
+        _mainApplicationController.cartItems.add({
+          "id": item.sId,
+          "data": item,
+          "qty": item.productQuantity,
+        });
       }
+      setState(() {
+        _mainApplicationController.cartItems.refresh();
+      });
     }
-    ();
   }
 
   @override
@@ -81,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(width: 2.w),
                             InkWell(
                               overlayColor:
-                              MaterialStateProperty.all(Colors.transparent),
+                                  MaterialStateProperty.all(Colors.transparent),
                               onTap: () {
                                 Get.to(() => const ChooseLocation());
                               },
@@ -91,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Home",
@@ -110,9 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                   Text(
-                                    "${Global.storageServices.getString(
-                                        "pin_code")}, ${Global.storageServices
-                                        .getString("pin_location")}",
+                                    "${Global.storageServices.getString("pin_code")}, ${Global.storageServices.getString("pin_location")}",
                                     style: GoogleFonts.heebo(
                                       color: Colors.white,
                                       fontSize: 14.sp,
@@ -173,9 +174,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               }
 
                               return Column(children: [
-                                SizedBox(
+                                Container(
                                   width: 90.w,
                                   height: 160,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.w),
+                                  ),
                                   child: PageView(
                                       controller: controller,
                                       onPageChanged: (val) {
@@ -184,14 +188,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       children: List.generate(
                                         3,
-                                            (index) =>
-                                            Image(
-                                              image: NetworkImage(
-                                                  imgUrls[index]),
-                                              fit: BoxFit.cover,
-                                            ),
-                                      )
-                                  ),
+                                        (index) => Image(
+                                          image: NetworkImage(imgUrls[index]),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )),
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -199,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: List.generate(imgUrls.length,
-                                            (index) => buildDots(index)),
+                                        (index) => buildDots(index)),
                                   ),
                                 ),
                               ]);
@@ -271,13 +272,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             physics:
-                                            const BouncingScrollPhysics(),
+                                                const BouncingScrollPhysics(),
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 1.w),
                                             itemCount:
-                                            snapshot.data!.length >= 8
-                                                ? 8
-                                                : snapshot.data!.length,
+                                                snapshot.data!.length >= 8
+                                                    ? 8
+                                                    : snapshot.data!.length,
                                             itemBuilder: (context, index) {
                                               return InkWell(
                                                 onTap: () {
@@ -299,15 +300,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           height: 90,
                                                           width: 90,
                                                           decoration:
-                                                          BoxDecoration(
+                                                              BoxDecoration(
                                                             shape:
-                                                            BoxShape.circle,
+                                                                BoxShape.circle,
                                                             image:
-                                                            DecorationImage(
+                                                                DecorationImage(
                                                               image: NetworkImage(
                                                                   snapshot
                                                                       .data![
-                                                                  index]
+                                                                          index]
                                                                       .categoryImg!
                                                                       .url!),
                                                               fit: BoxFit.cover,
@@ -319,10 +320,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           snapshot.data![index]
                                                               .categoryName!,
                                                           style:
-                                                          GoogleFonts.heebo(
+                                                              GoogleFonts.heebo(
                                                             fontSize: 16.sp,
                                                             fontWeight:
-                                                            FontWeight.w500,
+                                                                FontWeight.w500,
                                                           ),
                                                         ),
                                                       ],
@@ -360,11 +361,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Get.to(() =>
-                                  const HomeOfferScreen(
-                                    endpoints: Constants
-                                        .bestDealsProductsListEndPoint,
-                                  ));
+                                  Get.to(() => const HomeOfferScreen(
+                                        endpoints: Constants
+                                            .bestDealsProductsListEndPoint,
+                                      ));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 List<BestSellerDealsCombosSingleProductModel>>(
                               future: _mainApplicationController
                                   .getBestSellerDealsCombos(
-                                  Constants.bestDealsProductsListEndPoint),
+                                      Constants.bestDealsProductsListEndPoint),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return singleProductTile(snapshot);
@@ -432,11 +432,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Get.to(() =>
-                                  const HomeOfferScreen(
-                                    endpoints: Constants
-                                        .bestSellerProductsListEndPoint,
-                                  ));
+                                  Get.to(() => const HomeOfferScreen(
+                                        endpoints: Constants
+                                            .bestSellerProductsListEndPoint,
+                                      ));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -475,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 List<BestSellerDealsCombosSingleProductModel>>(
                               future: _mainApplicationController
                                   .getBestSellerDealsCombos(
-                                  Constants.bestSellerProductsListEndPoint),
+                                      Constants.bestSellerProductsListEndPoint),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return singleProductTile(snapshot);
@@ -504,11 +503,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Get.to(() =>
-                                  const HomeOfferScreen(
-                                    endpoints: Constants
-                                        .bestCombosProductsListEndPoint,
-                                  ));
+                                  Get.to(() => const HomeOfferScreen(
+                                        endpoints: Constants
+                                            .bestCombosProductsListEndPoint,
+                                      ));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -547,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 List<BestSellerDealsCombosSingleProductModel>>(
                               future: _mainApplicationController
                                   .getBestSellerDealsCombos(
-                                  Constants.bestCombosProductsListEndPoint),
+                                      Constants.bestCombosProductsListEndPoint),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return singleProductTile(snapshot);
@@ -573,89 +571,89 @@ class _HomeScreenState extends State<HomeScreen> {
         return SizedBox(
           child: Global.storageServices.getString("x-auth-token") != null
               ? _mainApplicationController.cartItems.isNotEmpty
-              ? Container(
-            width: 90.w,
-            padding:
-            EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  blurRadius: 10,
-                  spreadRadius: 5,
-                  offset: const Offset(0, 0),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Items in Cart",
-                  style: GoogleFonts.heebo(
-                    color: Constants.primaryColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    _mainApplicationController.pageIdx.value = 2;
-                  },
-                  child: Text(
-                    "View Cart",
-                    style: GoogleFonts.heebo(
-                      color: Constants.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-              : const SizedBox()
+                  ? Container(
+                      width: 90.w,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            blurRadius: 10,
+                            spreadRadius: 5,
+                            offset: const Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Items in Cart",
+                            style: GoogleFonts.heebo(
+                              color: Constants.primaryColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              _mainApplicationController.pageIdx.value = 2;
+                            },
+                            child: Text(
+                              "View Cart",
+                              style: GoogleFonts.heebo(
+                                color: Constants.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox()
               : _mainApplicationController.cartItems.isNotEmpty
-              ? Container(
-            width: 90.w,
-            padding:
-            EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  blurRadius: 10,
-                  spreadRadius: 5,
-                  offset: const Offset(0, 0),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Items in Cart",
-                  style: GoogleFonts.heebo(
-                    color: Constants.primaryColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    _mainApplicationController.pageIdx.value = 2;
-                  },
-                  child: Text(
-                    "View Cart",
-                    style: GoogleFonts.heebo(
-                      color: Constants.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-              : const SizedBox(),
+                  ? Container(
+                      width: 90.w,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            blurRadius: 10,
+                            spreadRadius: 5,
+                            offset: const Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Items in Cart",
+                            style: GoogleFonts.heebo(
+                              color: Constants.primaryColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              _mainApplicationController.pageIdx.value = 2;
+                            },
+                            child: Text(
+                              "View Cart",
+                              style: GoogleFonts.heebo(
+                                color: Constants.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox(),
         );
       }),
     );
@@ -668,7 +666,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             height: 10,
             width: 10,
-            padding: const EdgeInsets.all(3),
+            padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Constants.lightTextColor.withOpacity(0.1),
@@ -681,7 +679,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     : Colors.transparent,
               ),
             ),
-          )
+          ),
+          const SizedBox(width: 10),
         ],
       );
     });
@@ -786,101 +785,201 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               containsItemWithId(snapshot.data![index].sId)
                                   ? InkWell(
-                                onTap: () async {
-                                  if (Global.storageServices
-                                      .getString("x-auth-token") !=
-                                      null) {
-                                    if (await _mainApplicationController
-                                        .deleteItemFromCart(
-                                        snapshot.data![index].sId)) {
-                                      _mainApplicationController
-                                          .deleteItemById(
-                                          snapshot.data![index].sId);
-                                      _mainApplicationController.cartItems
-                                          .refresh();
-                                    } else {
-                                      if (mounted) {
-                                        CustomToasts.errorToast(context,
-                                            "Unable to Delete Item from Cart..");
-                                      }
-                                    }
-                                  } else {
-                                    _mainApplicationController
-                                        .deleteItemById(
-                                        snapshot.data![index].sId);
-                                  }
-                                },
-                                child: Container(
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(1.w),
-                                    border: Border.all(
-                                        color: Constants.primaryColor),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 1.5.w),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.delete_outline,
-                                      color: Constants.primaryColor,
-                                    ),
-                                  ),
-                                ),
-                              )
+                                      // onTap: () async {
+                                      //   if (Global.storageServices
+                                      //           .getString("x-auth-token") !=
+                                      //       null) {
+                                      //     if (await _mainApplicationController
+                                      //         .deleteItemFromCart(
+                                      //             snapshot.data![index].sId)) {
+                                      //       _mainApplicationController
+                                      //           .deleteItemById(
+                                      //               snapshot.data![index].sId);
+                                      //       _mainApplicationController.cartItems
+                                      //           .refresh();
+                                      //     } else {
+                                      //       if (mounted) {
+                                      //         CustomToasts.errorToast(context,
+                                      //             "Unable to Delete Item from Cart..");
+                                      //       }
+                                      //     }
+                                      //   } else {
+                                      //     _mainApplicationController
+                                      //         .deleteItemById(
+                                      //             snapshot.data![index].sId);
+                                      //   }
+                                      // },
+                                      child: Container(
+                                      height: 30,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(1.w),
+                                        border: Border.all(
+                                            color: Constants.primaryColor),
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 2.w),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            onTap: () async {
+                                              if (Global.storageServices
+                                                      .getString(
+                                                          "x-auth-token") !=
+                                                  null) {
+                                                if (await _mainApplicationController
+                                                    .deleteItemFromCart(snapshot
+                                                        .data![index].sId!, null)) {
+                                                  loadCartData();
+                                                  _mainApplicationController
+                                                      .cartItems
+                                                      .refresh();
+                                                  setState(() {});
+                                                } else {
+                                                  if (mounted) {
+                                                    CustomToasts.errorToast(
+                                                        context,
+                                                        "Unable to Decrease Quantity");
+                                                  }
+                                                }
+                                              } else {
+                                                _mainApplicationController
+                                                    .decrementQtyById(snapshot
+                                                        .data![index].sId!);
+                                                _mainApplicationController
+                                                    .cartItems
+                                                    .refresh();
+                                              }
+                                            },
+                                            child: Icon(
+                                              Icons.remove,
+                                              color: Constants.primaryColor,
+                                              size: 17.sp,
+                                            ),
+                                          ),
+                                          Obx(() {
+                                            return Text(
+                                              "${getQuantityById(snapshot.data![index].sId)}",
+                                              style: GoogleFonts.heebo(
+                                                color: Constants.primaryColor,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            );
+                                          }),
+                                          InkWell(
+                                            onTap: () async {
+                                              if (Global.storageServices
+                                                      .getString(
+                                                          "x-auth-token") !=
+                                                  null) {
+                                                if (await _mainApplicationController
+                                                    .addItemToCart(snapshot
+                                                        .data![index].sId!)) {
+                                                  loadCartData();
+                                                  _mainApplicationController
+                                                      .cartItems
+                                                      .refresh();
+                                                  setState(() {});
+                                                } else {
+                                                  if (mounted) {
+                                                    CustomToasts.errorToast(
+                                                        context,
+                                                        "Unable to Increase Quantity");
+                                                  }
+                                                }
+                                              } else {
+                                                _mainApplicationController
+                                                    .incrementQtyById(snapshot
+                                                        .data![index].sId!);
+                                                _mainApplicationController
+                                                    .cartItems
+                                                    .refresh();
+                                              }
+                                            },
+                                            child: Icon(
+                                              Icons.add,
+                                              color: Constants.primaryColor,
+                                              size: 17.sp,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                      // Container(
+                                      //   height: 30,
+                                      //   decoration: BoxDecoration(
+                                      //     borderRadius:
+                                      //     BorderRadius.circular(1.w),
+                                      //     border: Border.all(
+                                      //         color: Constants.primaryColor),
+                                      //   ),
+                                      //   padding: EdgeInsets.symmetric(
+                                      //       horizontal: 1.5.w),
+                                      //   child: Center(
+                                      //     child: Icon(
+                                      //       Icons.delete_outline,
+                                      //       color: Constants.primaryColor,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      )
                                   : InkWell(
-                                onTap: () async {
-                                  if (Global.storageServices
-                                      .getString("x-auth-token") !=
-                                      null) {
-                                    if (await _mainApplicationController
-                                        .addItemToCart(
-                                        snapshot.data![index].sId)) {
-                                      _mainApplicationController.cartItems
-                                          .add({
-                                        "id": snapshot.data![index].sId,
-                                        "data": snapshot.data![index],
-                                        "qty": 1,
-                                      });
-                                      _mainApplicationController.cartItems
-                                          .refresh();
-                                    } else {
-                                      if (mounted) {
-                                        CustomToasts.errorToast(context,
-                                            "Unable to add Item from Cart..");
-                                      }
-                                    }
-                                  } else {
-                                    _mainApplicationController.cartItems
-                                        .add({
-                                      "id": snapshot.data![index].sId,
-                                      "data": snapshot.data![index],
-                                      "qty": 1,
-                                    });
-                                    _mainApplicationController.cartItems
-                                        .refresh();
-                                  }
-                                },
-                                child: Container(
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(1.w),
-                                    border: Border.all(
-                                        color: Constants.primaryColor),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w),
-                                  child: Center(
-                                    child: Text(
-                                      "Add",
-                                      style: GoogleFonts.heebo(
-                                        color: Constants.primaryColor,
+                                      onTap: () async {
+                                        if (Global.storageServices
+                                                .getString("x-auth-token") !=
+                                            null) {
+                                          if (await _mainApplicationController
+                                              .addItemToCart(
+                                                  snapshot.data![index].sId)) {
+                                            _mainApplicationController.cartItems
+                                                .add({
+                                              "id": snapshot.data![index].sId,
+                                              "data": snapshot.data![index],
+                                              "qty": 1,
+                                            });
+                                            _mainApplicationController.cartItems
+                                                .refresh();
+                                          } else {
+                                            if (mounted) {
+                                              CustomToasts.errorToast(context,
+                                                  "Unable to add Item from Cart..");
+                                            }
+                                          }
+                                        } else {
+                                          _mainApplicationController.cartItems
+                                              .add({
+                                            "id": snapshot.data![index].sId,
+                                            "data": snapshot.data![index],
+                                            "qty": 1,
+                                          });
+                                          _mainApplicationController.cartItems
+                                              .refresh();
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(1.w),
+                                          border: Border.all(
+                                              color: Constants.primaryColor),
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 5.w),
+                                        child: Center(
+                                          child: Text(
+                                            "Add",
+                                            style: GoogleFonts.heebo(
+                                              color: Constants.primaryColor,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
                             ],
                           );
                         }),
@@ -897,5 +996,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool containsItemWithId(String id) {
     return _mainApplicationController.cartItems.any((item) => item["id"] == id);
+  }
+
+  int getQuantityById(String itemId) {
+    var item = _mainApplicationController.cartItems.firstWhere(
+      (item) => item["id"] == itemId,
+      orElse: () => null,
+    );
+
+    return item != null ? item["qty"] : 0;
   }
 }

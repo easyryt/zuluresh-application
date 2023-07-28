@@ -24,12 +24,16 @@ class MainApplicationController extends GetxController {
   var pageIdx = 0.obs;
   var bannerIdx = 0.obs;
 
+  var selectedAddressData = SingleAddressModel().obs;
+
   List<Widget> homeWidgets = [
     const HomeScreen(),
     const CategoriesScreen(),
     const CartScreen(),
     const AccountScreen(),
   ];
+
+
 
   Future<List<BannerModel>> getAllBanners() async {
     Dio.Response response =
@@ -77,6 +81,8 @@ class MainApplicationController extends GetxController {
       Get.to(() => const ChooseDeliveryScreen());
     }
   }
+
+  var homeQty = 0.obs;
 
   Future<CartDataModel> getCartData() async {
     Dio.Response response =
@@ -184,12 +190,12 @@ class MainApplicationController extends GetxController {
     }
   }
 
-  deleteItemFromCart(String id) async {
+  deleteItemFromCart(String id, String? all) async {
     Dio.Response response = await Global.apiClient.putData(
         Constants.updateProductToCartEndPoint,
         {
           "productId": id,
-          "removeProduct": "1",
+          "removeProduct": all ??  "1",
         },
         null);
 
@@ -280,6 +286,17 @@ class MainApplicationController extends GetxController {
 
   var selectedDeliveryDate = 0.obs;
   var selectedDeliveryTime = SingleTimeSlotModel();
+
+  deleteAddress(String id) async{
+    Dio.Response response = await Global.apiClient
+        .deleteData("${Constants.deleteUserAddressEndPoint}/$id", null);
+
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   Future<List<SingleTimeSlotModel>> getAllTimeSlots() async {
     Dio.Response response = await Global.apiClient

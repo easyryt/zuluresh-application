@@ -24,7 +24,7 @@ class ChooseDeliveryScreen extends StatefulWidget {
 class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
   final MainApplicationController _mainApplicationController = Get.find();
   final ChooseDeliveryController _chooseDeliveryController =
-      Get.put(ChooseDeliveryController());
+  Get.put(ChooseDeliveryController());
 
   bool selectedAddress = false;
 
@@ -75,79 +75,79 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                 children: [
                   Expanded(
                     child:
-                        // SingleChildScrollView(
-                        //   child: FutureBuilder<Dio>(
-                        //     itemCount: 90,
-                        //     itembuilder:(context, snapshot){
-                        //       return Container(
-                        //         width: 90.w,
-                        //         decoration: BoxDecoration(
-                        //           border: DashedBorder.fromBorderSide(
-                        //             dashLength: 10,
-                        //             side: BorderSide(
-                        //                 color: Constants.primaryColor, width: 1),
-                        //           ),
-                        //           borderRadius: BorderRadius.circular(9),
-                        //           // border: Border.all(color: const Color(0xFF941A49)),
-                        //         ),
-                        //         padding: EdgeInsets.symmetric(
-                        //             horizontal: 5.w, vertical: 1.h),
-                        //         child: Column(
-                        //           crossAxisAlignment: CrossAxisAlignment.start,
-                        //           children: [
-                        //             SizedBox(height: 1.h),
-                        //             Row(
-                        //               mainAxisAlignment:
-                        //               MainAxisAlignment.spaceBetween,
-                        //               children: [
-                        //                 Row(
-                        //                   children: [
-                        //                     Icon(
-                        //                       Icons.location_on,
-                        //                       color: Constants.primaryColor,
-                        //                       size: 20.sp,
-                        //                     ),
-                        //                     Text(
-                        //                       "Home",
-                        //                       style: GoogleFonts.heebo(
-                        //                         fontSize: 17.sp,
-                        //                         fontWeight: FontWeight.w500,
-                        //                         color: Constants.primaryColor,
-                        //                       ),
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //                 InkWell(
-                        //                   onTap: (){
-                        //                     Get.to(()=> const SelectAddressScreen());
-                        //                   },
-                        //                   child: Text(
-                        //                     "Change",
-                        //                     style: GoogleFonts.heebo(
-                        //                       fontSize: 15.sp,
-                        //                       fontWeight: FontWeight.w400,
-                        //                       color: Constants.primaryColor,
-                        //                     ),
-                        //                   ),
-                        //                 ),
-                        //               ],
-                        //             ),
-                        //             SizedBox(height: 1.h),
-                        //             Text(
-                        //               "Irfan\nSadar Bazar, xxxxxxxxx\nDelhi - 65008 ",
-                        //               style: GoogleFonts.heebo(
-                        //                 fontSize: 15.sp,
-                        //                 color: Constants.lightTextColor,
-                        //               ),
-                        //             ),
-                        //             SizedBox(height: 1.h),
-                        //           ],
-                        //         ),
-                        //       );
-                        //     }
-                        //   ),
-                        // )
-                        Container(
+                    // SingleChildScrollView(
+                    //   child: FutureBuilder<Dio>(
+                    //     itemCount: 90,
+                    //     itembuilder:(context, snapshot){
+                    //       return Container(
+                    //         width: 90.w,
+                    //         decoration: BoxDecoration(
+                    //           border: DashedBorder.fromBorderSide(
+                    //             dashLength: 10,
+                    //             side: BorderSide(
+                    //                 color: Constants.primaryColor, width: 1),
+                    //           ),
+                    //           borderRadius: BorderRadius.circular(9),
+                    //           // border: Border.all(color: const Color(0xFF941A49)),
+                    //         ),
+                    //         padding: EdgeInsets.symmetric(
+                    //             horizontal: 5.w, vertical: 1.h),
+                    //         child: Column(
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             SizedBox(height: 1.h),
+                    //             Row(
+                    //               mainAxisAlignment:
+                    //               MainAxisAlignment.spaceBetween,
+                    //               children: [
+                    //                 Row(
+                    //                   children: [
+                    //                     Icon(
+                    //                       Icons.location_on,
+                    //                       color: Constants.primaryColor,
+                    //                       size: 20.sp,
+                    //                     ),
+                    //                     Text(
+                    //                       "Home",
+                    //                       style: GoogleFonts.heebo(
+                    //                         fontSize: 17.sp,
+                    //                         fontWeight: FontWeight.w500,
+                    //                         color: Constants.primaryColor,
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //                 InkWell(
+                    //                   onTap: (){
+                    //                     Get.to(()=> const SelectAddressScreen());
+                    //                   },
+                    //                   child: Text(
+                    //                     "Change",
+                    //                     style: GoogleFonts.heebo(
+                    //                       fontSize: 15.sp,
+                    //                       fontWeight: FontWeight.w400,
+                    //                       color: Constants.primaryColor,
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //             SizedBox(height: 1.h),
+                    //             Text(
+                    //               "Irfan\nSadar Bazar, xxxxxxxxx\nDelhi - 65008 ",
+                    //               style: GoogleFonts.heebo(
+                    //                 fontSize: 15.sp,
+                    //                 color: Constants.lightTextColor,
+                    //               ),
+                    //             ),
+                    //             SizedBox(height: 1.h),
+                    //           ],
+                    //         ),
+                    //       );
+                    //     }
+                    //   ),
+                    // )
+                    Container(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
@@ -177,16 +177,18 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                         selectedAddress = true;
 
                                         if (snapshot.data!.length == 1) {
-                                          _mainApplicationController.selectedAddressId.value = snapshot.data![0].sId!;
+                                          _mainApplicationController
+                                              .selectedAddressId.value =
+                                          snapshot.data![0].sId!;
                                           return Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(height: 1.h),
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -200,10 +202,10 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                                         snapshot.data![0]
                                                             .saveAddressAs!,
                                                         style:
-                                                            GoogleFonts.heebo(
+                                                        GoogleFonts.heebo(
                                                           fontSize: 17.sp,
                                                           fontWeight:
-                                                              FontWeight.w500,
+                                                          FontWeight.w500,
                                                           color: Constants
                                                               .primaryColor,
                                                         ),
@@ -213,14 +215,14 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                                   InkWell(
                                                     onTap: () {
                                                       Get.to(() =>
-                                                          const SelectAddressScreen());
+                                                      const SelectAddressScreen());
                                                     },
                                                     child: Text(
                                                       "Change",
                                                       style: GoogleFonts.heebo(
                                                         fontSize: 15.sp,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         color: Constants
                                                             .primaryColor,
                                                       ),
@@ -230,35 +232,42 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                               ),
                                               SizedBox(height: 1.h),
                                               Text(
-                                                "${snapshot.data![0].houseFlatNo}, ${snapshot.data![0].blockName}",
+                                                "${snapshot.data![0]
+                                                    .houseFlatNo}, ${snapshot
+                                                    .data![0].blockName}",
                                                 style: GoogleFonts.heebo(
                                                   fontSize: 15.sp,
                                                   color:
-                                                      Constants.lightTextColor,
+                                                  Constants.lightTextColor,
                                                 ),
                                               ),
                                               Text(
-                                                "${snapshot.data![0].street} - ${snapshot.data![0].landMark}",
+                                                "${snapshot.data![0]
+                                                    .street} - ${snapshot
+                                                    .data![0].landMark}",
                                                 style: GoogleFonts.heebo(
                                                   fontSize: 15.sp,
                                                   color:
-                                                      Constants.lightTextColor,
+                                                  Constants.lightTextColor,
                                                 ),
                                               ),
                                               Text(
-                                                "${snapshot.data![0].locality} - ${snapshot.data![0].pinCode}",
+                                                "${snapshot.data![0]
+                                                    .locality} - ${snapshot
+                                                    .data![0].pinCode}",
                                                 style: GoogleFonts.heebo(
                                                   fontSize: 15.sp,
                                                   color:
-                                                      Constants.lightTextColor,
+                                                  Constants.lightTextColor,
                                                 ),
                                               ),
                                               Text(
-                                                "+91 ${snapshot.data![0].phoneNo!}",
+                                                "+91 ${snapshot.data![0]
+                                                    .phoneNo!}",
                                                 style: GoogleFonts.heebo(
                                                   fontSize: 15.sp,
                                                   color:
-                                                      Constants.lightTextColor,
+                                                  Constants.lightTextColor,
                                                 ),
                                               ),
                                               SizedBox(height: 1.h),
@@ -266,100 +275,118 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                           );
                                         } else {
                                           SingleAddressModel data =
-                                              SingleAddressModel();
+                                          SingleAddressModel();
                                           for (var item in snapshot.data!) {
                                             if (item.setAsDefault!) {
                                               data = item;
-                                              _mainApplicationController.selectedAddressId.value = data.sId!;
+                                              _mainApplicationController
+                                                  .selectedAddressId.value =
+                                              data.sId!;
                                             }
                                           }
 
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(height: 1.h),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.location_on,
-                                                        color: Constants
-                                                            .primaryColor,
-                                                        size: 20.sp,
-                                                      ),
-                                                      Text(
-                                                        snapshot.data![0]
-                                                            .saveAddressAs!,
-                                                        style:
-                                                            GoogleFonts.heebo(
-                                                          fontSize: 17.sp,
+                                          for (var item in snapshot.data!) {
+                                            if (item.sId ==
+                                                _mainApplicationController
+                                                    .selectedAddressId.value) {
+                                              data = item;
+                                              _mainApplicationController.selectedAddressData.value = item;
+                                            }
+                                          }
+
+                                          return Obx(() {
+                                            return Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 1.h),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.location_on,
+                                                          color: Constants
+                                                              .primaryColor,
+                                                          size: 20.sp,
+                                                        ),
+                                                        Text(
+                                                          _mainApplicationController.selectedAddressData.value.saveAddressAs!,
+                                                          // snapshot.data![0]
+                                                          //     .saveAddressAs!,
+                                                          style:
+                                                          GoogleFonts.heebo(
+                                                            fontSize: 17.sp,
+                                                            fontWeight:
+                                                            FontWeight.w500,
+                                                            color: Constants
+                                                                .primaryColor,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Get.to(() =>
+                                                        const SelectAddressScreen());
+                                                      },
+                                                      child: Text(
+                                                        "Change",
+                                                        style: GoogleFonts
+                                                            .heebo(
+                                                          fontSize: 15.sp,
                                                           fontWeight:
-                                                              FontWeight.w500,
+                                                          FontWeight.w400,
                                                           color: Constants
                                                               .primaryColor,
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Get.to(() =>
-                                                          const SelectAddressScreen());
-                                                    },
-                                                    child: Text(
-                                                      "Change",
-                                                      style: GoogleFonts.heebo(
-                                                        fontSize: 15.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Constants
-                                                            .primaryColor,
-                                                      ),
                                                     ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 1.h),
+                                                Text(
+                                                  "${_mainApplicationController.selectedAddressData.value.houseFlatNo}, ${_mainApplicationController.selectedAddressData.value
+                                                      .blockName}",
+                                                  style: GoogleFonts.heebo(
+                                                    fontSize: 15.sp,
+                                                    color:
+                                                    Constants.lightTextColor,
                                                   ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 1.h),
-                                              Text(
-                                                "${data.houseFlatNo}, ${data.blockName}",
-                                                style: GoogleFonts.heebo(
-                                                  fontSize: 15.sp,
-                                                  color:
-                                                      Constants.lightTextColor,
                                                 ),
-                                              ),
-                                              Text(
-                                                "${data.street} - ${data.landMark}",
-                                                style: GoogleFonts.heebo(
-                                                  fontSize: 15.sp,
-                                                  color:
-                                                      Constants.lightTextColor,
+                                                Text(
+                                                  "${_mainApplicationController.selectedAddressData.value.street} - ${_mainApplicationController.selectedAddressData.value
+                                                      .landMark}",
+                                                  style: GoogleFonts.heebo(
+                                                    fontSize: 15.sp,
+                                                    color:
+                                                    Constants.lightTextColor,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                "${data.locality} - ${data.pinCode}",
-                                                style: GoogleFonts.heebo(
-                                                  fontSize: 15.sp,
-                                                  color:
-                                                      Constants.lightTextColor,
+                                                Text(
+                                                  "${_mainApplicationController.selectedAddressData.value.locality} - ${_mainApplicationController.selectedAddressData.value
+                                                      .pinCode}",
+                                                  style: GoogleFonts.heebo(
+                                                    fontSize: 15.sp,
+                                                    color:
+                                                    Constants.lightTextColor,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                "+91 ${data.phoneNo!}",
-                                                style: GoogleFonts.heebo(
-                                                  fontSize: 15.sp,
-                                                  color:
-                                                      Constants.lightTextColor,
+                                                Text(
+                                                  "+91 ${_mainApplicationController.selectedAddressData.value.phoneNo!}",
+                                                  style: GoogleFonts.heebo(
+                                                    fontSize: 15.sp,
+                                                    color:
+                                                    Constants.lightTextColor,
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(height: 1.h),
-                                            ],
-                                          );
+                                                SizedBox(height: 1.h),
+                                              ],
+                                            );
+                                          });
                                         }
                                       } else {
                                         selectedAddress = false;
@@ -378,7 +405,7 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                             InkWell(
                                               onTap: () {
                                                 Get.to(() =>
-                                                    const SelectAddressScreen());
+                                                const SelectAddressScreen());
                                               },
                                               child: PrimaryFilledButton(
                                                 width: 90.w,
@@ -411,7 +438,7 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                 title: const Text("Choose time"),
                                 shape: const Border(),
                                 childrenPadding:
-                                    EdgeInsets.symmetric(horizontal: 5.w),
+                                EdgeInsets.symmetric(horizontal: 5.w),
                                 backgroundColor: Colors.white,
                                 children: [
                                   SizedBox(
@@ -419,11 +446,13 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                     width: double.infinity,
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         tabs("Today", 0),
                                         tabs("Tomorrow", 1),
-                                        tabs("${DateTime.now().day + 2} June", 2),
+                                        tabs("${DateTime
+                                            .now()
+                                            .day + 2} June", 2),
                                       ],
                                     ),
                                   ),
@@ -435,32 +464,32 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                                         if (snapshot.hasData) {
                                           _mainApplicationController
                                               .refineDataListByDate(
-                                                  snapshot.data!);
+                                              snapshot.data!);
                                           return Column(
                                             children: [
                                               _mainApplicationController
-                                                          .selectedDeliveryDate
-                                                          .value ==
-                                                      0
+                                                  .selectedDeliveryDate
+                                                  .value ==
+                                                  0
                                                   ? buildTimeSlotTime(
-                                                      _mainApplicationController
-                                                          .todayTimeSlots)
+                                                  _mainApplicationController
+                                                      .todayTimeSlots)
                                                   : const SizedBox(),
                                               _mainApplicationController
-                                                          .selectedDeliveryDate
-                                                          .value ==
-                                                      1
+                                                  .selectedDeliveryDate
+                                                  .value ==
+                                                  1
                                                   ? buildTimeSlotTime(
-                                                      _mainApplicationController
-                                                          .tomorrowTimeSlots)
+                                                  _mainApplicationController
+                                                      .tomorrowTimeSlots)
                                                   : const SizedBox(),
                                               _mainApplicationController
-                                                          .selectedDeliveryDate
-                                                          .value ==
-                                                      2
+                                                  .selectedDeliveryDate
+                                                  .value ==
+                                                  2
                                                   ? buildTimeSlotTime(
-                                                      _mainApplicationController
-                                                          .nextDayTimeSlots)
+                                                  _mainApplicationController
+                                                      .nextDayTimeSlots)
                                                   : const SizedBox(),
                                             ],
                                           );
@@ -482,10 +511,10 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                   InkWell(
                     onTap: () {
                       if (_mainApplicationController.selectedDeliveryTime.sId ==
-                              null ||
+                          null ||
                           selectedAddress == false) {
                         if (_mainApplicationController
-                                .selectedDeliveryTime.sId ==
+                            .selectedDeliveryTime.sId ==
                             null) {
                           CustomToasts.errorToast(
                               context, "Choose Time Slot..");
@@ -529,7 +558,7 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                         _chooseDeliveryController
                             .selectedDeliveryTimeIndex.value = index;
                         _mainApplicationController.selectedDeliveryTime =
-                            data[index];
+                        data[index];
                       },
                       child: Container(
                         height: 45,
@@ -543,8 +572,8 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                           ),
                           borderRadius: BorderRadius.circular(2.w),
                           color: _chooseDeliveryController
-                                      .selectedDeliveryTimeIndex.value ==
-                                  index
+                              .selectedDeliveryTimeIndex.value ==
+                              index
                               ? Constants.primaryColor
                               : Colors.white,
                         ),
@@ -552,8 +581,8 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
                           "${data[index].startTime} - ${data[index].endTime}",
                           style: GoogleFonts.heebo(
                             color: _chooseDeliveryController
-                                        .selectedDeliveryTimeIndex.value ==
-                                    index
+                                .selectedDeliveryTimeIndex.value ==
+                                index
                                 ? Colors.white
                                 : Constants.primaryColor,
                             fontSize: 16.sp,
@@ -604,9 +633,9 @@ class _ChooseDeliveryScreenState extends State<ChooseDeliveryScreen> {
             date,
             style: GoogleFonts.heebo(
               color:
-                  _mainApplicationController.selectedDeliveryDate.value == index
-                      ? Colors.white
-                      : Constants.primaryColor,
+              _mainApplicationController.selectedDeliveryDate.value == index
+                  ? Colors.white
+                  : Constants.primaryColor,
               fontWeight: FontWeight.w500,
             ),
           ),

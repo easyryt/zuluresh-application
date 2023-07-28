@@ -7,6 +7,7 @@ import 'package:zuluresh/views/main_application/main_home.dart';
 
 import '../../../common/custom_toasts.dart';
 import '../../../models/best_seller_deals_combos_single_products.dart';
+import '../../../models/cart_data_model.dart';
 import '../../../services/global.dart';
 import '../../../utils/constants.dart';
 
@@ -26,6 +27,31 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
   final MainApplicationController _mainApplicationController = Get.find();
 
   @override
+  void initState() {
+    super.initState();
+    () async {
+      loadCartData();
+    }();
+  }
+
+  loadCartData() async {
+    if (Global.storageServices.getString("x-auth-token") != null) {
+      CartDataModel cartData = await _mainApplicationController.getCartData();
+      _mainApplicationController.cartItems.clear();
+      for (var item in cartData.productsData!) {
+        _mainApplicationController.cartItems.add({
+          "id": item.sId,
+          "data": item,
+          "qty": item.productQuantity,
+        });
+      }
+      setState(() {
+        _mainApplicationController.cartItems.refresh();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
@@ -41,7 +67,7 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
                 children: [
                   SizedBox(width: 5.w),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       Get.back();
                     },
                     child: Icon(
@@ -53,7 +79,13 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
                   Expanded(
                     child: Center(
                       child: Text(
-                        widget.endpoints == Constants.bestCombosProductsListEndPoint ? "Best Combos" : widget.endpoints == Constants.bestSellerProductsListEndPoint ? "Best Sellers" : "Best Deals",
+                        widget.endpoints ==
+                                Constants.bestCombosProductsListEndPoint
+                            ? "Best Combos"
+                            : widget.endpoints ==
+                                    Constants.bestSellerProductsListEndPoint
+                                ? "Best Sellers"
+                                : "Best Deals",
                         style: GoogleFonts.heebo(
                           fontWeight: FontWeight.w500,
                           fontSize: 18.sp,
@@ -76,7 +108,8 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
 
   Widget listData() {
     return FutureBuilder<List<BestSellerDealsCombosSingleProductModel>>(
-      future: _mainApplicationController.getBestSellerDealsCombos(widget.endpoints),
+      future:
+          _mainApplicationController.getBestSellerDealsCombos(widget.endpoints),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
@@ -180,7 +213,7 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
                                               null) {
                                             if (await _mainApplicationController
                                                 .deleteItemFromCart(snapshot
-                                                    .data![index].sId!)) {
+                                                    .data![index].sId!, null)) {
                                               _mainApplicationController
                                                   .deleteItemById(snapshot
                                                       .data![index].sId!);
@@ -201,6 +234,7 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
                                         },
                                         child: Container(
                                           height: 30,
+                                          width: 80,
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(1.w),
@@ -208,12 +242,103 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
                                                 color: Constants.primaryColor),
                                           ),
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: 1.5.w),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.delete_outline,
-                                              color: Constants.primaryColor,
-                                            ),
+                                              horizontal: 2.w),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InkWell(
+                                                onTap: () async {
+                                                  if (Global.storageServices
+                                                          .getString(
+                                                              "x-auth-token") !=
+                                                      null) {
+                                                    if (await _mainApplicationController
+                                                        .deleteItemFromCart(
+                                                            snapshot
+                                                                .data![index]
+                                                                .sId!, null)) {
+                                                      loadCartData();
+                                                      _mainApplicationController
+                                                          .cartItems
+                                                          .refresh();
+                                                      setState(() {});
+                                                    } else {
+                                                      if (mounted) {
+                                                        CustomToasts.errorToast(
+                                                            context,
+                                                            "Unable to Decrease Quantity");
+                                                      }
+                                                    }
+                                                  } else {
+                                                    _mainApplicationController
+                                                        .decrementQtyById(
+                                                            snapshot
+                                                                .data![index]
+                                                                .sId!);
+                                                    _mainApplicationController
+                                                        .cartItems
+                                                        .refresh();
+                                                  }
+                                                },
+                                                child: Icon(
+                                                  Icons.remove,
+                                                  color: Constants.primaryColor,
+                                                  size: 17.sp,
+                                                ),
+                                              ),
+                                              Obx(() {
+                                                return Text(
+                                                  // "${_mainApplicationController.homeQty}",
+                                                  "${getQuantityById(snapshot.data![index].sId!)}",
+                                                  style: GoogleFonts.heebo(
+                                                    color:
+                                                        Constants.primaryColor,
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                );
+                                              }),
+                                              InkWell(
+                                                onTap: () async {
+                                                  if (Global.storageServices
+                                                          .getString(
+                                                              "x-auth-token") !=
+                                                      null) {
+                                                    if (await _mainApplicationController
+                                                        .addItemToCart(snapshot
+                                                            .data![index]
+                                                            .sId!)) {
+                                                      loadCartData();
+                                                      _mainApplicationController
+                                                          .cartItems
+                                                          .refresh();
+                                                      setState(() {});
+                                                    } else {
+                                                      if (mounted) {
+                                                        CustomToasts.errorToast(
+                                                            context,
+                                                            "Unable to Increase Quantity");
+                                                      }
+                                                    }
+                                                  } else {
+                                                    _mainApplicationController
+                                                        .incrementQtyById(
+                                                            snapshot
+                                                                .data![index]
+                                                                .sId!);
+                                                    _mainApplicationController
+                                                        .cartItems
+                                                        .refresh();
+                                                  }
+                                                },
+                                                child: Icon(
+                                                  Icons.add,
+                                                  color: Constants.primaryColor,
+                                                  size: 17.sp,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       )
@@ -308,5 +433,14 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
 
   bool containsItemWithId(String id) {
     return _mainApplicationController.cartItems.any((item) => item["id"] == id);
+  }
+
+  int getQuantityById(String itemId) {
+    var item = _mainApplicationController.cartItems.firstWhere(
+      (item) => item["id"] == itemId,
+      orElse: () => null,
+    );
+
+    return item != null ? item["qty"] : 0;
   }
 }

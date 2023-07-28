@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:zuluresh/common/button/primary_filled_button.dart';
 import 'package:zuluresh/common/button/primary_outlined_button.dart';
+import 'package:zuluresh/common/custom_toasts.dart';
 import 'package:zuluresh/controllers/main_application_controller.dart';
 import 'package:zuluresh/models/single_address_model.dart';
 import 'package:zuluresh/services/global.dart';
@@ -99,8 +100,14 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                                                       .selectedAddress
                                                       .value = index;
                                                   _mainApplicationController
-                                                      .selectedAddressId.value =
-                                                  snapshot.data![index].sId!;
+                                                          .selectedAddressId
+                                                          .value =
+                                                      snapshot
+                                                          .data![index].sId!;
+                                                  _mainApplicationController
+                                                          .selectedAddressData
+                                                          .value =
+                                                      snapshot.data![index];
                                                 },
                                                 child: Container(
                                                   width: 90.w,
@@ -222,21 +229,46 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: [
-                                                          Text(
-                                                            "Delete",
-                                                            style: GoogleFonts
-                                                                .heebo(
-                                                              fontSize: 16.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: _mainApplicationController
-                                                                          .selectedAddress
-                                                                          .value ==
-                                                                      index
-                                                                  ? Colors.white
-                                                                  : Constants
-                                                                      .primaryColor,
+                                                          InkWell(
+                                                            onTap: () async {
+                                                              if (await _mainApplicationController
+                                                                  .deleteAddress(snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .sId!)) {
+                                                                if (mounted) {
+                                                                  CustomToasts
+                                                                      .successToast(
+                                                                          context,
+                                                                          "Address deleted Successfully..");
+                                                                }
+                                                              } else {
+                                                                if (mounted) {
+                                                                  CustomToasts
+                                                                      .successToast(
+                                                                          context,
+                                                                          "Unable to delete address for now. Try again later...");
+                                                                }
+                                                              }
+                                                              setState(() {});
+                                                            },
+                                                            child: Text(
+                                                              "Delete",
+                                                              style: GoogleFonts
+                                                                  .heebo(
+                                                                fontSize: 16.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: _mainApplicationController
+                                                                            .selectedAddress
+                                                                            .value ==
+                                                                        index
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Constants
+                                                                        .primaryColor,
+                                                              ),
                                                             ),
                                                           ),
                                                           InkWell(
@@ -246,9 +278,11 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                                                                         .transparent),
                                                             onTap: () {
                                                               Get.to(() =>
-                                                                  const EditAddressScreen(
-                                                                      update:
-                                                                          true));
+                                                                  EditAddressScreen(
+                                                                    update:
+                                                                        true,
+                                                                    id: snapshot.data![index].sId!,
+                                                                  ));
                                                             },
                                                             child: Text(
                                                               "Edit",
@@ -402,8 +436,10 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                             overlayColor:
                                 MaterialStateProperty.all(Colors.transparent),
                             onTap: () {
-                              Get.to(
-                                  () => const EditAddressScreen(update: false));
+                              Get.to(() => const EditAddressScreen(
+                                    update: false,
+                                    id: "",
+                                  ));
                             },
                             child: PrimaryOutlinedButton(
                               buttonText: "New Address",

@@ -15,7 +15,9 @@ class Constants {
   static const String bestDealsProductsListEndPoint = "user/bestDeals";
   static const String bestCombosProductsListEndPoint = "user/combos";
   static const String addUserAddressEndPoint = "user/addAddress";
-  static const String updateUserAddressEndPoint = "user/addAddress";
+  static const String deleteUserAddressEndPoint = "user/deleteAddress";
+  static const String updateUserAddressEndPoint = "user/changeAddress";
+  static const String getSingleUserAddressEndPoint = "user/getSingleAddress";
   static const String userAllAddressesEndPoint = "user/AllAddress";
   static const String getAvailableTimeSlotsEndPoint = "user/getTimeSlot";
   static const String getCartDataEndPoint = "user/checkOut";
