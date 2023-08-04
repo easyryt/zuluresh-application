@@ -83,6 +83,17 @@ class MainApplicationController extends GetxController {
   }
 
   var homeQty = 0.obs;
+  List allProductData = [];
+
+  Future getAllProductsList() async{
+    Dio.Response response =
+    await Global.apiClient.getData(Constants.getAllProductsListEndPoint, null);
+    if(response.statusCode == 200){
+      return response.data["data"];
+    }
+
+    return false;
+  }
 
   Future<CartDataModel> getCartData() async {
     Dio.Response response =

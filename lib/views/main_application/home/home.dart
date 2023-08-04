@@ -34,7 +34,15 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     () async {
       loadCartData();
+      loadAllProduct();
     }();
+  }
+
+  loadAllProduct() async {
+    var data = await _mainApplicationController.getAllProductsList();
+    if (data != false) {
+      _mainApplicationController.allProductData = data;
+    }
   }
 
   loadCartData() async {
@@ -75,53 +83,94 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         width: 90.w,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              MaterialCommunityIcons.map_marker,
-                              color: Colors.white,
-                              size: 20.sp,
-                            ),
-                            SizedBox(width: 2.w),
-                            InkWell(
-                              overlayColor:
-                                  MaterialStateProperty.all(Colors.transparent),
-                              onTap: () {
-                                Get.to(() => const ChooseLocation());
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
+                            Row(
+                              children: [
+                                Icon(
+                                  MaterialCommunityIcons.map_marker,
+                                  color: Colors.white,
+                                  size: 20.sp,
+                                ),
+                                SizedBox(width: 2.w),
+                                InkWell(
+                                  overlayColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  onTap: () {
+                                    Get.to(() => const ChooseLocation());
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Home",
+                                            style: GoogleFonts.heebo(
+                                              color: Colors.white,
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(width: 1.w),
+                                          Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: Colors.white,
+                                            size: 20.sp,
+                                          ),
+                                        ],
+                                      ),
                                       Text(
-                                        "Home",
+                                        "${Global.storageServices.getString("pin_code")}, ${Global.storageServices.getString("pin_location")}",
                                         style: GoogleFonts.heebo(
                                           color: Colors.white,
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14.sp,
                                         ),
-                                      ),
-                                      SizedBox(width: 1.w),
-                                      Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: Colors.white,
-                                        size: 20.sp,
                                       ),
                                     ],
                                   ),
-                                  Text(
-                                    "${Global.storageServices.getString("pin_code")}, ${Global.storageServices.getString("pin_location")}",
-                                    style: GoogleFonts.heebo(
-                                      color: Colors.white,
-                                      fontSize: 14.sp,
-                                    ),
+                                ),
+                              ],
+                            ),
+                            InkWell(
+                              onTap: () {
+                                _mainApplicationController.pageIdx.value = 2;
+                              },
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Icon(
+                                    MaterialCommunityIcons.cart,
+                                    color: Colors.white,
+                                    size: 20.sp,
                                   ),
+                                  Positioned(
+                                      top: -15,
+                                      right: 0,
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        padding: EdgeInsets.all(1.w),
+                                        child: Text(
+                                          _mainApplicationController
+                                              .cartItems.length
+                                              .toString(),
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ))
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -135,21 +184,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(15),
                       color: Colors.white,
                     ),
-                    child: TextFormField(
-                      cursorHeight: 18,
-                      cursorColor: Constants.primaryColor,
-                      decoration: InputDecoration(
-                          icon: Icon(
-                            Feather.search,
-                            size: 18.sp,
-                          ),
-                          iconColor: Constants.lightTextColor,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          hintText: "Search By Product Name",
-                          hintStyle: GoogleFonts.heebo(
-                            fontWeight: FontWeight.w400,
-                          )),
+                    child: InkWell(
+                      onTap: () {
+                        // showSearch(context: context, delegate: CustomSearch(_mainApplicationController.allProductData));
+                      },
+                      child: TextFormField(
+                        onTap: () {
+                          showSearch(
+                              context: context,
+                              delegate: CustomSearch(
+                                  _mainApplicationController.allProductData));
+                        },
+                        cursorHeight: 18,
+                        cursorColor: Constants.primaryColor,
+                        decoration: InputDecoration(
+                            icon: Icon(
+                              Feather.search,
+                              size: 18.sp,
+                            ),
+                            iconColor: Constants.lightTextColor,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            hintText: "Search By Product Name",
+                            hintStyle: GoogleFonts.heebo(
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ),
                     ),
                   ),
                   SizedBox(height: 1.h),
@@ -590,7 +650,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Items in Cart",
+                            "${_mainApplicationController.cartItems.length} Items in Cart",
                             style: GoogleFonts.heebo(
                               color: Constants.primaryColor,
                               fontWeight: FontWeight.w400,
@@ -831,8 +891,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           "x-auth-token") !=
                                                   null) {
                                                 if (await _mainApplicationController
-                                                    .deleteItemFromCart(snapshot
-                                                        .data![index].sId!, null)) {
+                                                    .deleteItemFromCart(
+                                                        snapshot
+                                                            .data![index].sId!,
+                                                        null)) {
                                                   loadCartData();
                                                   _mainApplicationController
                                                       .cartItems
@@ -1005,5 +1067,279 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     return item != null ? item["qty"] : 0;
+  }
+}
+
+class CustomSearch extends SearchDelegate<String> {
+  final MainApplicationController _mainApplicationController = Get.find();
+  List _allProducts = []; // Variable to store all products.
+
+  CustomSearch(List products) {
+    _allProducts = products; // Save the data from the API call in the variable.
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = '';
+        },
+        icon: Icon(Icons.clear),
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context,
+            ''); // Close the search and pass an empty string as the result.
+      },
+      icon: Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // This method is called when the user submits a search query.
+    // Filter the local data (_allProducts) based on the search query.
+    final filteredProducts = _allProducts.where((product) {
+      return product["title"].toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    return ListView.builder(
+      itemCount: filteredProducts.length,
+      itemBuilder: (context, index) {
+        return searchTile(filteredProducts[index], index, context);
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // This method is called when the user types in the search bar but hasn't submitted the query yet.
+    // You can show suggestions based on the user's input if needed.
+    return Container();
+  }
+
+  bool containsItemWithId(String id) {
+    return _mainApplicationController.cartItems.any((item) => item["id"] == id);
+  }
+
+  int qty(String id) {
+    for (var element in _mainApplicationController.cartItems) {
+      if (element["id"] == id) {
+        return element["qty"];
+      }
+    }
+    // print();
+    // return _mainApplicationController.cartItems.firstWhere((element) => element["_id"] == id)["qty"];
+    return 0;
+  }
+
+  Widget searchTile(var product, int index, BuildContext context) {
+    return Obx(() {
+      return Column(
+        children: [
+          Container(
+            width: 90.w,
+            height: 120,
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.w),
+            decoration: BoxDecoration(
+              border: Border.all(color: Constants.primaryColor),
+              borderRadius: BorderRadius.circular(2.w),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 110,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(2.w),
+                    image: DecorationImage(
+                      image: NetworkImage(product["productImg"][0]["url"]),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 2.5.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              product["title"],
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: GoogleFonts.heebo(
+                                color: Colors.black,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        product["MRP"].toString(),
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: GoogleFonts.heebo(
+                          decoration: TextDecoration.lineThrough,
+                          color: Colors.black,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      SizedBox(height: 1.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.currency_rupee,
+                                color: Constants.primaryColor,
+                                size: 16.sp,
+                              ),
+                              Text(
+                                product["price"].toString(),
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: GoogleFonts.heebo(
+                                  color: Constants.primaryColor,
+                                  fontSize: 16.5.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          containsItemWithId(product["_id"])
+                              ? Container(
+                                  height: 30,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(1.w),
+                                    border: Border.all(
+                                        color: Constants.primaryColor),
+                                  ),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 2.5.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InkWell(
+                                        onTap: () async {
+                                          if (Global.storageServices
+                                                  .getString("x-auth-token") !=
+                                              null) {
+                                            if (await _mainApplicationController
+                                                .deleteItemFromCart(
+                                                    product["_id"], null)) {
+                                            } else {}
+                                          } else {
+                                            _mainApplicationController
+                                                .decrementQtyById(
+                                                    product["_id"]);
+                                          }
+                                          _mainApplicationController.cartItems
+                                              .refresh();
+                                        },
+                                        child: Icon(
+                                          Icons.remove,
+                                          color: Constants.primaryColor,
+                                          size: 17.sp,
+                                        ),
+                                      ),
+                                      Text(
+                                        qty(product["_id"]).toString(),
+                                        style: GoogleFonts.heebo(
+                                          color: Constants.primaryColor,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () async {
+                                          if (Global.storageServices
+                                                  .getString("x-auth-token") !=
+                                              null) {
+                                            if (await _mainApplicationController
+                                                .addItemToCart(
+                                                    product["_id"])) {
+                                            } else {}
+                                          }
+                                          _mainApplicationController
+                                              .incrementQtyById(product["_id"]);
+                                          _mainApplicationController.cartItems
+                                              .refresh();
+                                        },
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Constants.primaryColor,
+                                          size: 17.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(
+                                  height: 30,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(1.w),
+                                    color: Constants.primaryColor,
+                                  ),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 2.5.w),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      if (Global.storageServices
+                                              .getString("x-auth-token") !=
+                                          null) {
+                                        if (await _mainApplicationController
+                                            .addItemToCart(product["_id"])) {
+                                        } else {}
+                                      }
+                                      _mainApplicationController
+                                          .incrementQtyById(product["_id"]);
+                                      _mainApplicationController.cartItems
+                                          .refresh();
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        "Add",
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 1.5.h),
+        ],
+      );
+    });
   }
 }

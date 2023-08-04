@@ -109,8 +109,10 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                 return listData();
               }),
       ),
-      floatingActionButton:
-          widget.back ? CustomToasts.viewCartBanner() : const SizedBox(),
+      floatingActionButton: widget.back
+          ? CustomToasts.viewCartBanner(
+              _mainApplicationController.cartItems.length)
+          : const SizedBox(),
     );
   }
 
@@ -265,7 +267,8 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                                                   if (await _mainApplicationController
                                                       .deleteItemFromCart(
                                                           snapshot.data![index]
-                                                              .sId!, null)) {
+                                                              .sId!,
+                                                          null)) {
                                                     loadCartData();
                                                     _mainApplicationController
                                                         .cartItems

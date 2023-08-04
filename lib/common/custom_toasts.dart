@@ -90,7 +90,7 @@ class CustomToasts {
     );
   }
 
-  static Widget viewCartBanner(){
+  static Widget viewCartBanner(int count){
     final MainApplicationController mainApplicationController = Get.find();
 
     return Obx(() {
@@ -116,7 +116,7 @@ class CustomToasts {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Items in Cart",
+                "$count Items in Cart",
                 style: GoogleFonts.heebo(
                   color: Constants.primaryColor,
                   fontWeight: FontWeight.w400,

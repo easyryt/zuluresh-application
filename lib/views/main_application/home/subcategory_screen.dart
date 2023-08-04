@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:zuluresh/controllers/main_application_controller.dart';
 import 'package:zuluresh/controllers/subcategory/subcategory_controller.dart';
 import 'package:zuluresh/models/subcategory_model.dart';
 import 'package:zuluresh/utils/constants.dart';
@@ -26,6 +27,7 @@ class SubCategoryScreen extends StatefulWidget {
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
   final SubCategoryController _subCategoryController =
       Get.put(SubCategoryController());
+  final MainApplicationController _mainApplicationController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +94,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                                                   .selectedCategory.value ==
                                               0
                                           ? 2.5.w
-                                          : 5.w),
+                                          : 3.w),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 4,
@@ -153,18 +155,18 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                                           },
                                           child: Column(
                                             children: [
-                                              SizedBox(height: 2.h),
+                                              // SizedBox(height: 2.h),
                                               Container(
-                                                height: 25.w,
-                                                width: 25.w,
+                                                height: 20.w,
+                                                width: 20.w,
                                                 margin: EdgeInsets.symmetric(
                                                     horizontal:
                                                         _subCategoryController
                                                                     .selectedCategory
                                                                     .value ==
                                                                 index + 1
-                                                            ? 2.5.w
-                                                            : 5.w),
+                                                            ? 1.5.w
+                                                            : 2.w),
                                                 decoration: BoxDecoration(
                                                   border: Border.all(
                                                       width: 4,
@@ -240,7 +242,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
           ],
         ),
       ),
-      floatingActionButton: CustomToasts.viewCartBanner(),
+      floatingActionButton: CustomToasts.viewCartBanner(_mainApplicationController.cartItems.length),
     );
   }
 }

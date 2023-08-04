@@ -102,7 +102,7 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
           ],
         ),
       ),
-      floatingActionButton: CustomToasts.viewCartBanner(),
+      floatingActionButton: CustomToasts.viewCartBanner(_mainApplicationController.cartItems.length),
     );
   }
 
