@@ -129,6 +129,9 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
               itemCount: snapshot.data!.length,
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               itemBuilder: (context, index) {
+                String percentage = _mainApplicationController.calculatePercentage(
+                    snapshot.data![index].mRP!.toDouble(),
+                    snapshot.data![index].price!.toDouble());
                 return Column(
                   children: [
                     SizedBox(height: 2.5.h),
@@ -180,16 +183,33 @@ class _SubCategoryItemScreenState extends State<SubCategoryItemScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Text(
-                            snapshot.data![index].pieces.toString(),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: GoogleFonts.heebo(
-                              color: Colors.black,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w300,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                snapshot.data![index].mRP.toString(),
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: GoogleFonts.heebo(
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              SizedBox(width: 2.5.w),
+                              Text(
+                                "- $percentage%",
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: GoogleFonts.heebo(
+                                  color: Constants.primaryColor,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: 1.h),
                           Obx(() {

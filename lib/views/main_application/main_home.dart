@@ -33,18 +33,22 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
           highlightColor: Colors.transparent,
         ),
         child: Obx(() {
-          return BottomNavigationBar(
+          return _mainApplicationController.showCart.value == 0 ? BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             onTap: (index) {
-              _mainApplicationController.pageIdx.value = index;
               if (index == 2) {
-                CartScreen cart = CartScreen();
-                setState(() {
-
-                });
+                _mainApplicationController.showCart.value = 1;
+                Get.to(() => const CartScreen());
+                // CartScreen cart = CartScreen();
+                // setState(() {
+                //
+                // });
                 // Timer(const Duration(seconds: 1), () {
                 //   cart.getState().refresh();
                 // });
+              }
+              else{
+                _mainApplicationController.pageIdx.value = index;
               }
             },
             selectedItemColor: Constants.primaryColor,
@@ -68,7 +72,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 label: "Account",
               )
             ],
-          );
+          ) : SizedBox();
         }),
       ),
     );

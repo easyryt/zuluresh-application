@@ -753,6 +753,9 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.symmetric(horizontal: 1.w),
         itemCount: snapshot.data!.length >= 8 ? 8 : snapshot.data!.length,
         itemBuilder: (context, index) {
+          String percentage = _mainApplicationController.calculatePercentage(
+              snapshot.data![index].mRP!.toDouble(),
+              snapshot.data![index].price!.toDouble());
           return Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -796,7 +799,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(height: 1.h),
                         Text(
-                          snapshot.data![0].title!,
+                          snapshot.data![index].title!,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -806,16 +809,33 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        Text(
-                          snapshot.data![0].mRP.toString(),
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: GoogleFonts.heebo(
-                            color: Colors.black,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w300,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              snapshot.data![index].mRP.toString(),
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: GoogleFonts.heebo(
+                                decoration: TextDecoration.lineThrough,
+                                color: Colors.black,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            SizedBox(width: 2.5.w),
+                            Text(
+                              "- $percentage%",
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: GoogleFonts.heebo(
+                                color: Constants.primaryColor,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 1.h),
                         Obx(() {

@@ -24,6 +24,8 @@ class MainApplicationController extends GetxController {
   var pageIdx = 0.obs;
   var bannerIdx = 0.obs;
 
+  var showCart = 0.obs;
+
   var selectedAddressData = SingleAddressModel().obs;
 
   List<Widget> homeWidgets = [
@@ -33,11 +35,16 @@ class MainApplicationController extends GetxController {
     const AccountScreen(),
   ];
 
+  String calculatePercentage(double mrp, double price) {
+    double percentage;
+    percentage = ((mrp - price) / mrp) * 100;
 
+    return percentage.toInt().toString();
+  }
 
   Future<List<BannerModel>> getAllBanners() async {
-    Dio.Response response =
-        await Global.apiClient.getData(Constants.getAllBannerListEndPoint, null);
+    Dio.Response response = await Global.apiClient
+        .getData(Constants.getAllBannerListEndPoint, null);
 
     if (response.statusCode == 200) {
       final List categoryList = response.data["data"];
@@ -85,10 +92,10 @@ class MainApplicationController extends GetxController {
   var homeQty = 0.obs;
   List allProductData = [];
 
-  Future getAllProductsList() async{
-    Dio.Response response =
-    await Global.apiClient.getData(Constants.getAllProductsListEndPoint, null);
-    if(response.statusCode == 200){
+  Future getAllProductsList() async {
+    Dio.Response response = await Global.apiClient
+        .getData(Constants.getAllProductsListEndPoint, null);
+    if (response.statusCode == 200) {
       return response.data["data"];
     }
 
@@ -206,7 +213,7 @@ class MainApplicationController extends GetxController {
         Constants.updateProductToCartEndPoint,
         {
           "productId": id,
-          "removeProduct": all ??  "1",
+          "removeProduct": all ?? "1",
         },
         null);
 
@@ -264,15 +271,15 @@ class MainApplicationController extends GetxController {
   }
 
   getSumOfProducts() {
-    var totalMrp =
-        cartItems.fold(0, (sum, item) => sum + (item['data'].price*item['qty']) as int);
+    var totalMrp = cartItems.fold(
+        0, (sum, item) => sum + (item['data'].price * item['qty']) as int);
 
     return totalMrp;
   }
 
   getDiscountSumOfProducts() {
-    var totalDiscount =
-    cartItems.fold(0, (sum, item) => sum + (item['data'].mRP*item['qty']) as int);
+    var totalDiscount = cartItems.fold(
+        0, (sum, item) => sum + (item['data'].mRP * item['qty']) as int);
 
     return totalDiscount - getSumOfProducts();
   }
@@ -298,13 +305,13 @@ class MainApplicationController extends GetxController {
   var selectedDeliveryDate = 0.obs;
   var selectedDeliveryTime = SingleTimeSlotModel();
 
-  deleteAddress(String id) async{
+  deleteAddress(String id) async {
     Dio.Response response = await Global.apiClient
         .deleteData("${Constants.deleteUserAddressEndPoint}/$id", null);
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }

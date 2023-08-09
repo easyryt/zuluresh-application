@@ -13,6 +13,7 @@ import 'package:zuluresh/views/main_application/address/select_address.dart';
 import 'package:zuluresh/views/set_location.dart';
 import 'package:zuluresh/views/update_profile.dart';
 
+import '../cart/cart_screen.dart';
 import 'contacts/contact_us.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Get.to(()=> const UpdateProfileScreen());
+                      Get.to(() => const UpdateProfileScreen());
                     },
                     child: singleTile(FontAwesome5.user_circle, "My Profile"),
                   ),
@@ -129,7 +130,10 @@ class _AccountScreenState extends State<AccountScreen> {
                     endIndent: 5.w,
                     indent: 5.w,
                   ),
-                  singleTile(Feather.shield_off, "Privacy Policy"),
+                  InkWell(
+                    onTap: () {},
+                    child: singleTile(Feather.shield_off, "Privacy Policy"),
+                  ),
                 ],
               ),
             ),

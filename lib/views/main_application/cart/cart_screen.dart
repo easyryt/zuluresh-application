@@ -8,6 +8,7 @@ import 'package:zuluresh/controllers/main_application_controller.dart';
 import 'package:zuluresh/models/cart_data_model.dart';
 import 'package:zuluresh/services/global.dart';
 import 'package:zuluresh/utils/constants.dart';
+import 'package:zuluresh/views/main_application/main_home.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -34,12 +35,18 @@ class _CartScreenState extends State<CartScreen> {
               width: 100.w,
               child: Row(
                 children: [
-                  // SizedBox(width: 5.w),
-                  // Icon(
-                  //   Icons.arrow_back_ios_new_sharp,
-                  //   size: 19.sp,
-                  //   color: const Color(0xFF941A49),
-                  // ),
+                  SizedBox(width: 5.w),
+                  InkWell(
+                    onTap: () {
+                      _mainApplicationController.showCart.value = 0;
+                      Get.offAll(() => const MainHomeScreen());
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios_new_sharp,
+                      size: 19.sp,
+                      color: const Color(0xFF941A49),
+                    ),
+                  ),
                   Expanded(
                     child: Center(
                       child: Text(
@@ -74,6 +81,16 @@ class _CartScreenState extends State<CartScreen> {
                                       itemCount:
                                           snapshot.data?.productsData!.length,
                                       itemBuilder: (context, index) {
+                                        String percentage =
+                                            _mainApplicationController
+                                                .calculatePercentage(
+                                          snapshot.data!.productsData![index]
+                                              .productMrp!
+                                              .toDouble(),
+                                          snapshot
+                                              .data!.productsData![index].price!
+                                              .toDouble(),
+                                        );
                                         return Column(
                                           children: [
                                             Container(
@@ -154,11 +171,13 @@ class _CartScreenState extends State<CartScreen> {
                                                                         .getString(
                                                                             "x-auth-token") !=
                                                                     null) {
-                                                                  if (await _mainApplicationController.deleteItemFromCart(snapshot
-                                                                      .data!
-                                                                      .productsData![
-                                                                          index]
-                                                                      .sId!, "0")) {
+                                                                  if (await _mainApplicationController.deleteItemFromCart(
+                                                                      snapshot
+                                                                          .data!
+                                                                          .productsData![
+                                                                              index]
+                                                                          .sId!,
+                                                                      "0")) {
                                                                     _mainApplicationController.deleteItemById(snapshot
                                                                         .data!
                                                                         .productsData![
@@ -167,9 +186,8 @@ class _CartScreenState extends State<CartScreen> {
                                                                     _mainApplicationController
                                                                         .cartItems
                                                                         .refresh();
-                                                                    setState(() {
-
-                                                                    });
+                                                                    setState(
+                                                                        () {});
                                                                   } else {
                                                                     if (mounted) {
                                                                       CustomToasts.errorToast(
@@ -195,28 +213,57 @@ class _CartScreenState extends State<CartScreen> {
                                                             ),
                                                           ],
                                                         ),
-                                                        Text(
-                                                          snapshot
-                                                              .data!
-                                                              .productsData![
-                                                                  index]
-                                                              .productMrp
-                                                              .toString(),
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 2,
-                                                          style:
-                                                              GoogleFonts.heebo(
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .lineThrough,
-                                                            color: Colors.black,
-                                                            fontSize: 14.sp,
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                          ),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              snapshot
+                                                                  .data!
+                                                                  .productsData![
+                                                                      index]
+                                                                  .productMrp
+                                                                  .toString(),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 2,
+                                                              style: GoogleFonts
+                                                                  .heebo(
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 14.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                width: 2.5.w),
+                                                            Text(
+                                                              "- $percentage%",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 2,
+                                                              style: GoogleFonts
+                                                                  .heebo(
+                                                                color: Constants
+                                                                    .primaryColor,
+                                                                fontSize: 14.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                         SizedBox(height: 1.h),
                                                         //Price and Quantity Row
@@ -292,11 +339,12 @@ class _CartScreenState extends State<CartScreen> {
                                                                   InkWell(
                                                                     onTap:
                                                                         () async {
-                                                                      if (await _mainApplicationController.deleteItemFromCart(snapshot
-                                                                          .data!
-                                                                          .productsData![
-                                                                              index]
-                                                                          .sId!, null)) {
+                                                                      if (await _mainApplicationController.deleteItemFromCart(
+                                                                          snapshot
+                                                                              .data!
+                                                                              .productsData![index]
+                                                                              .sId!,
+                                                                          null)) {
                                                                         setState(
                                                                             () {});
                                                                       } else {
@@ -420,6 +468,15 @@ class _CartScreenState extends State<CartScreen> {
                                 itemCount:
                                     _mainApplicationController.cartItems.length,
                                 itemBuilder: (context, index) {
+                                  String percentage = _mainApplicationController.calculatePercentage(
+                                      _mainApplicationController
+                                          .cartItems[index]
+                                      ["data"]
+                                          .productMrp.toDouble(),
+                                      _mainApplicationController
+                                          .cartItems[index]
+                                      ["data"]
+                                          .price!.toDouble());
                                   return Column(
                                     children: [
                                       Container(
@@ -493,24 +550,40 @@ class _CartScreenState extends State<CartScreen> {
                                                       ),
                                                     ],
                                                   ),
-                                                  Text(
-                                                    _mainApplicationController
-                                                        .cartItems[index]
-                                                            ["data"]
-                                                        .mRP
-                                                        .toString(),
-                                                    textAlign: TextAlign.start,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    style: GoogleFonts.heebo(
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                      color: Colors.black,
-                                                      fontSize: 14.sp,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                    ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        _mainApplicationController
+                                                            .cartItems[index]
+                                                                ["data"]
+                                                            .mRP
+                                                            .toString(),
+                                                        textAlign: TextAlign.start,
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        maxLines: 2,
+                                                        style: GoogleFonts.heebo(
+                                                          decoration: TextDecoration
+                                                              .lineThrough,
+                                                          color: Colors.black,
+                                                          fontSize: 14.sp,
+                                                          fontWeight:
+                                                              FontWeight.w300,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 2.5.w),
+                                                      Text(
+                                                        "- $percentage%",
+                                                        textAlign: TextAlign.start,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 2,
+                                                        style: GoogleFonts.heebo(
+                                                          color: Constants.primaryColor,
+                                                          fontSize: 14.sp,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                   SizedBox(height: 1.h),
                                                   Row(

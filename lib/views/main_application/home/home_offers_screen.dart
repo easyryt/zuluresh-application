@@ -102,7 +102,8 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
           ],
         ),
       ),
-      floatingActionButton: CustomToasts.viewCartBanner(_mainApplicationController.cartItems.length),
+      floatingActionButton: CustomToasts.viewCartBanner(
+          _mainApplicationController.cartItems.length),
     );
   }
 
@@ -117,6 +118,9 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
               itemCount: snapshot.data!.length,
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               itemBuilder: (context, index) {
+                String percentage = _mainApplicationController.calculatePercentage(
+                    snapshot.data![index].mRP!.toDouble(),
+                    snapshot.data![index].price!.toDouble());
                 return Column(
                   children: [
                     SizedBox(height: 2.5.h),
@@ -168,16 +172,33 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Text(
-                            snapshot.data![index].mRP.toString(),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: GoogleFonts.heebo(
-                              color: Colors.black,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w300,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                snapshot.data![index].mRP.toString(),
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: GoogleFonts.heebo(
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Colors.black,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              SizedBox(width: 2.5.w),
+                              Text(
+                                "- $percentage%",
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: GoogleFonts.heebo(
+                                  color: Constants.primaryColor,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: 1.h),
                           Obx(() {
@@ -212,8 +233,9 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
                                                   .getString("x-auth-token") !=
                                               null) {
                                             if (await _mainApplicationController
-                                                .deleteItemFromCart(snapshot
-                                                    .data![index].sId!, null)) {
+                                                .deleteItemFromCart(
+                                                    snapshot.data![index].sId!,
+                                                    null)) {
                                               _mainApplicationController
                                                   .deleteItemById(snapshot
                                                       .data![index].sId!);
@@ -257,7 +279,8 @@ class _HomeOfferScreenState extends State<HomeOfferScreen> {
                                                         .deleteItemFromCart(
                                                             snapshot
                                                                 .data![index]
-                                                                .sId!, null)) {
+                                                                .sId!,
+                                                            null)) {
                                                       loadCartData();
                                                       _mainApplicationController
                                                           .cartItems
