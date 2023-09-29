@@ -851,7 +851,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     size: 16.sp,
                                   ),
                                   Text(
-                                    snapshot.data![0].mRP!.toString(),
+                                    snapshot.data![index].price!.toString(),
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
