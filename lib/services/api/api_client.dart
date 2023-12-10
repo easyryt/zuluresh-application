@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 class ApiClient {
   final Dio _dio = Dio();
-  final String _baseUrl = 'https://zuluresh.onrender.com/';
+  final String _baseUrl = 'https://zuluresh-3eqy.onrender.com/';
   String? token;
   Map<String, String>? mainHeaders;
 

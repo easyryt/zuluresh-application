@@ -81,6 +81,11 @@ class _CartScreenState extends State<CartScreen> {
                                       itemCount:
                                           snapshot.data?.productsData!.length,
                                       itemBuilder: (context, index) {
+                                        print(
+                                          snapshot.data!.productsData![index]
+                                              .productMrp!
+                                              .toDouble(),
+                                        );
                                         String percentage =
                                             _mainApplicationController
                                                 .calculatePercentage(
@@ -468,15 +473,15 @@ class _CartScreenState extends State<CartScreen> {
                                 itemCount:
                                     _mainApplicationController.cartItems.length,
                                 itemBuilder: (context, index) {
-                                  String percentage = _mainApplicationController.calculatePercentage(
-                                      _mainApplicationController
-                                          .cartItems[index]
-                                      ["data"]
-                                          .productMrp.toDouble(),
-                                      _mainApplicationController
-                                          .cartItems[index]
-                                      ["data"]
-                                          .price!.toDouble());
+                                  // String percentage = _mainApplicationController
+                                      // .calculatePercentage(
+                                      //     _mainApplicationController
+                                      //         .cartItems[index]["data"]
+                                      //         .productMrp
+                                      //         .toDouble(),
+                                      //     _mainApplicationController
+                                      //         .cartItems[index]["data"].price!
+                                      //         .toDouble());
                                   return Column(
                                     children: [
                                       Container(
@@ -558,13 +563,16 @@ class _CartScreenState extends State<CartScreen> {
                                                                 ["data"]
                                                             .mRP
                                                             .toString(),
-                                                        textAlign: TextAlign.start,
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         maxLines: 2,
-                                                        style: GoogleFonts.heebo(
-                                                          decoration: TextDecoration
-                                                              .lineThrough,
+                                                        style:
+                                                            GoogleFonts.heebo(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .lineThrough,
                                                           color: Colors.black,
                                                           fontSize: 14.sp,
                                                           fontWeight:
@@ -573,14 +581,21 @@ class _CartScreenState extends State<CartScreen> {
                                                       ),
                                                       SizedBox(width: 2.5.w),
                                                       Text(
-                                                        "- $percentage%",
-                                                        textAlign: TextAlign.start,
-                                                        overflow: TextOverflow.ellipsis,
+                                                        // "- $percentage%",
+                                                      '',
+
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         maxLines: 2,
-                                                        style: GoogleFonts.heebo(
-                                                          color: Constants.primaryColor,
+                                                        style:
+                                                            GoogleFonts.heebo(
+                                                          color: Constants
+                                                              .primaryColor,
                                                           fontSize: 14.sp,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                         ),
                                                       ),
                                                     ],

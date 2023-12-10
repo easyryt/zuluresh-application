@@ -228,6 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               List<String> imgUrls = [];
+                              print(imgUrls);
 
                               for (var item in snapshot.data!) {
                                 imgUrls.add(item.bannerImg!.url!);
@@ -247,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .bannerIdx.value = val;
                                       },
                                       children: List.generate(
-                                        3,
+                                        imgUrls.length,
                                         (index) => Image(
                                           image: NetworkImage(imgUrls[index]),
                                           fit: BoxFit.cover,

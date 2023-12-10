@@ -105,14 +105,19 @@ class MainApplicationController extends GetxController {
   Future<CartDataModel> getCartData() async {
     Dio.Response response =
         await Global.apiClient.getData(Constants.getCartDataEndPoint, null);
-
+    print("anything +++++++++++++++++++++++++++++++++++++++++++++++++++");
     if (response.statusCode == 200) {
       var cartData = response.data["data"];
+      // var cartData = response.data["data"];
+      print(cartData);
+      var mrp = cartData["productsData"][0]["Product_MRP"];
+      print("mrp here is:$mrp");
       return CartDataModel.fromJson(cartData);
       // return bestSellerDealsCombosSingleProductList
       //     .map((e) => BestSellerDealsCombosSingleProductModel.fromJson(e))
       //     .toList();
     } else {
+      print("not found.............................................");
       throw Exception(response.statusMessage);
     }
   }
